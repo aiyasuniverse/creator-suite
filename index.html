@@ -48,7 +48,7 @@ const LIVE_F=[...BASE_F,
   {key:"goal",label:"What is your main goal?",type:"select",options:["— Select —","Get Sales on the Day","Build Know / Like / Trust","Grow My Audience","Launch a New Offer","Re-engage Cold Audience"]},
 ];
 
-const NT={background:"none",border:"none",borderBottom:"2px solid transparent",cursor:"pointer",padding:"16px 10px",fontSize:15,color:MT,fontFamily:FFB,whiteSpace:"nowrap",letterSpacing:0.8,fontWeight:500,flexShrink:0};
+const NT={background:"none",border:"none",cursor:"pointer",padding:"14px 10px",fontSize:13,color:MT,fontFamily:FFB,whiteSpace:"nowrap",letterSpacing:0.8,fontWeight:500,flexShrink:0};
 const NA={color:ESP,fontWeight:600};
 const FI={width:"100%",background:IV,border:`1px solid ${BO}`,borderRadius:3,padding:"13px 15px",color:ESP,fontSize:13,fontFamily:FFB,outline:"none",appearance:"none"};
 const GB={width:"100%",background:BUT,color:IV,border:"none",borderRadius:3,padding:"15px",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:FFB,letterSpacing:2,marginBottom:10};
@@ -124,6 +124,7 @@ function App(){
   const [vgLoad,setVgLoad]=useState(false);
   const [vgRes,setVgRes]=useState("");
   const [vgErr,setVgErr]=useState("");
+  const [promptCount,setPromptCount]=useState(20);
   const [vgCp,setVgCp]=useState(false);
   const [st,setSt]=useState({category:"",platform:"",gender:"",ageRange:"",ethnicity:"",hairColor:"",hairHighlights:"",hairStyle:"",outfit:"",location:"",skin:"",undertone:"",aesthetic:"",goal:"",extra:""});
   const [stLoad,setStLoad]=useState(false);
@@ -141,6 +142,10 @@ function App(){
     }catch(e){return false;}
   });
   const [igLoad,setIgLoad]=useState(false);
+  const [yearlyBilling,setYearlyBilling]=useState(false);
+  const [unlockCode,setUnlockCode]=useState("");
+  const [unlockErr,setUnlockErr]=useState("");
+  const [unlocking,setUnlocking]=useState(false);
   const [igRes,setIgRes]=useState("");
   const [igErr,setIgErr]=useState("");
   const [igCp,setIgCp]=useState(false);
@@ -167,7 +172,7 @@ function App(){
 
   const nb=(label,pg,tid)=>{
     const active=tid?tool?.id===tid&&page==="tool":page===pg;
-    return html`<button onClick=${()=>tid?goTool(TOOLS.find(t=>t.id===tid)):setPage(pg)} style=${{...NT,...(active?NA:{}),boxShadow:active?"inset 0 -2px 0 #a07030":"none"}}>${tid==="live"&&html`<span style=${{color:"#c04040",fontSize:7,marginRight:2}}>●</span>`}${label}</button>`;
+    return html`<button onClick=${()=>tid?goTool(TOOLS.find(t=>t.id===tid)):setPage(pg)} style=${{...NT,...(active?NA:{}),boxShadow:active?"inset 0 -2px 0 #a07030":"none",fontSize:13}}>${tid==="live"&&html`<span style=${{color:"#c04040",fontSize:7,marginRight:2}}>●</span>`}${label}</button>`;
   };
 
   const buyBtn=(label,key)=>html`<button class="cta" onClick=${()=>window.open(stanPrem(key||"musicJingles"),"_blank")} style=${{background:BUT,color:IV,border:"none",cursor:"pointer",fontSize:10,padding:"6px 12px",borderRadius:3,fontFamily:FFB,letterSpacing:1}}>${label||"Purchase →"}</button>`;
@@ -179,18 +184,18 @@ function App(){
       <style>${CSS}</style>
 
       <!-- NAV -->
-      <nav style=${{background:IV,borderBottom:`1px solid ${BO}`,position:"sticky",top:0,zIndex:100,boxShadow:"0 2px 16px rgba(107,88,72,0.06)"}}>
+      <nav style=${{background:IV,position:"sticky",top:0,zIndex:100,boxShadow:"0 2px 8px rgba(107,88,72,0.06)",borderBottom:`1px solid ${BO}`}}>
         <div style=${{maxWidth:1200,margin:"0 auto",padding:"0 20px",display:"flex",alignItems:"center",overflowX:"auto"}}>
-          <button onClick=${()=>setPage("home")} style=${{background:"none",border:"none",cursor:"pointer",fontSize:13,fontWeight:600,color:ESP,fontFamily:FF,letterSpacing:2,padding:"16px 16px 16px 0",whiteSpace:"nowrap",borderRight:`1px solid ${BO}`,marginRight:12,flexShrink:0}}>Creator Suite</button>
+          <button onClick=${()=>setPage("home")} style=${{background:"none",border:"none",cursor:"pointer",fontSize:11,fontWeight:600,color:ESP,fontFamily:FF,letterSpacing:2,padding:"16px 16px 16px 0",whiteSpace:"nowrap",borderRight:`1px solid ${BO}`,marginRight:12,flexShrink:0}}>Creator Suite</button>
           <div style=${{display:"flex",alignItems:"center"}}>
             ${nb("Home","home")}
             ${nb("The Suite","suite")}
             ${nb("Inner Circle","circle")}
             ${TOOLS.map(t=>nb(t.nav,null,t.id))}
-            ${(()=>{const a=page==="vaults";return html`<button onClick=${()=>setPage("vaults")} style=${{...NT,...(a?NA:{}),display:"flex",flexDirection:"column",alignItems:"center",gap:1,padding:"11px 10px",boxShadow:a?"inset 0 -2px 0 #a07030":"none"}}><span style=${{fontSize:8,fontWeight:700,color:GD,letterSpacing:1.5,lineHeight:1,fontFamily:FFB}}>PREMIUM</span><span style=${{fontSize:11,letterSpacing:0.8,lineHeight:1.4,fontFamily:FFB,color:a?ESP:MT,fontWeight:a?600:500}}>Prompt Vaults</span></button>`})()}
-            ${(()=>{const a=page==="influencers";return html`<button onClick=${()=>setPage("influencers")} style=${{...NT,...(a?NA:{}),display:"flex",flexDirection:"column",alignItems:"center",gap:1,padding:"11px 10px",boxShadow:a?"inset 0 -2px 0 #a07030":"none"}}><span style=${{fontSize:8,fontWeight:700,color:GD,letterSpacing:1.5,lineHeight:1,fontFamily:FFB}}>PREMIUM</span><span style=${{fontSize:11,letterSpacing:0.8,lineHeight:1.4,fontFamily:FFB,color:a?ESP:MT,fontWeight:a?600:500}}>Influencers</span></button>`})()}
-            ${(()=>{const a=page==="music";return html`<button onClick=${()=>setPage("music")} style=${{...NT,...(a?NA:{}),display:"flex",flexDirection:"column",alignItems:"center",gap:1,padding:"11px 10px",boxShadow:a?"inset 0 -2px 0 #a07030":"none"}}><span style=${{fontSize:8,fontWeight:700,color:GD,letterSpacing:1.5,lineHeight:1,fontFamily:FFB}}>PREMIUM</span><span style=${{fontSize:11,letterSpacing:0.8,lineHeight:1.4,fontFamily:FFB,color:a?ESP:MT,fontWeight:a?600:500}}>Music & Jingles</span></button>`})()}
-            ${(()=>{const a=page==="stylist";return html`<button onClick=${()=>setPage("stylist")} style=${{...NT,...(a?NA:{}),display:"flex",flexDirection:"column",alignItems:"center",gap:1,padding:"11px 10px",boxShadow:a?"inset 0 -2px 0 #a07030":"none"}}><span style=${{fontSize:8,fontWeight:700,color:GD,letterSpacing:1.5,lineHeight:1,fontFamily:FFB}}>PREMIUM</span><span style=${{fontSize:11,letterSpacing:0.8,lineHeight:1.4,fontFamily:FFB,color:a?ESP:MT,fontWeight:a?600:500}}>Creator Stylist</span></button>`})()}
+            ${(()=>{const a=page==="vaults";return html`<button onClick=${()=>setPage("vaults")} style=${{...NT,...(a?NA:{}),display:"flex",flexDirection:"column",alignItems:"center",gap:1,padding:"11px 10px",boxShadow:a?"inset 0 -2px 0 #a07030":"none"}}><span style=${{fontSize:8,fontWeight:700,color:GD,letterSpacing:1.5,lineHeight:1,fontFamily:FFB}}>PREMIUM</span><span style=${{fontSize:13,letterSpacing:0.8,lineHeight:1.4,fontFamily:FFB,color:a?ESP:MT,fontWeight:a?600:500}}>Prompt Vaults</span></button>`})()}
+            ${(()=>{const a=page==="influencers";return html`<button onClick=${()=>setPage("influencers")} style=${{...NT,...(a?NA:{}),display:"flex",flexDirection:"column",alignItems:"center",gap:1,padding:"11px 10px",boxShadow:a?"inset 0 -2px 0 #a07030":"none"}}><span style=${{fontSize:8,fontWeight:700,color:GD,letterSpacing:1.5,lineHeight:1,fontFamily:FFB}}>PREMIUM</span><span style=${{fontSize:13,letterSpacing:0.8,lineHeight:1.4,fontFamily:FFB,color:a?ESP:MT,fontWeight:a?600:500}}>Influencers</span></button>`})()}
+            ${(()=>{const a=page==="music";return html`<button onClick=${()=>setPage("music")} style=${{...NT,...(a?NA:{}),display:"flex",flexDirection:"column",alignItems:"center",gap:1,padding:"11px 10px",boxShadow:a?"inset 0 -2px 0 #a07030":"none"}}><span style=${{fontSize:8,fontWeight:700,color:GD,letterSpacing:1.5,lineHeight:1,fontFamily:FFB}}>PREMIUM</span><span style=${{fontSize:13,letterSpacing:0.8,lineHeight:1.4,fontFamily:FFB,color:a?ESP:MT,fontWeight:a?600:500}}>Music & Jingles</span></button>`})()}
+            ${(()=>{const a=page==="stylist";return html`<button onClick=${()=>setPage("stylist")} style=${{...NT,...(a?NA:{}),display:"flex",flexDirection:"column",alignItems:"center",gap:1,padding:"11px 10px",boxShadow:a?"inset 0 -2px 0 #a07030":"none"}}><span style=${{fontSize:8,fontWeight:700,color:GD,letterSpacing:1.5,lineHeight:1,fontFamily:FFB}}>PREMIUM</span><span style=${{fontSize:13,letterSpacing:0.8,lineHeight:1.4,fontFamily:FFB,color:a?ESP:MT,fontWeight:a?600:500}}>Creator Stylist</span></button>`})()}
           </div>
         </div>
       </nav>
@@ -278,39 +283,61 @@ function App(){
       ${page==="circle"&&html`<main>
         <section style=${{background:ESP,padding:"80px 28px 60px"}}>
           <div style=${{maxWidth:1100,margin:"0 auto",textAlign:"center"}}>
-            <svg viewBox="0 0 40 56" width="32" height="44" style=${{display:"block",margin:"0 auto 20px",opacity:0.7}} fill="rgba(250,246,240,0.6)">
+            <svg viewBox="0 0 40 56" width="32" height="44" style=${{display:"block",margin:"0 auto 20px"}} fill="#a07030">
               <ellipse cx="20" cy="16" rx="12" ry="12"/>
-              <ellipse cx="20" cy="16" rx="6" ry="6" fill="${ESP}"/>
+              <ellipse cx="20" cy="16" rx="6" ry="6" fill="#6b5848"/>
               <rect x="14" y="26" width="12" height="20" rx="2"/>
-              <rect x="18" y="34" width="4" height="8" rx="1" fill="${ESP}"/>
+              <rect x="18" y="34" width="4" height="8" rx="1" fill="#6b5848"/>
             </svg>
             <p style=${{fontSize:9,letterSpacing:6,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>MEMBERSHIP</p>
             <h1 style=${{fontSize:"clamp(28px,5vw,52px)",fontWeight:600,color:IV,fontFamily:FF,margin:"0 0 16px",lineHeight:1.1}}>Inner Circle</h1>
-            <p style=${{fontSize:15,color:"rgba(250,246,240,0.7)",maxWidth:520,margin:"0 auto 60px",lineHeight:1.8,fontFamily:FF,fontStyle:"italic"}}>Your monthly membership unlocks all five AI tools inside the Creator Suite. Premium services are purchased separately.</p>
+            <p style=${{fontSize:15,color:"rgba(250,246,240,0.7)",maxWidth:520,margin:"0 auto 40px",lineHeight:1.8,fontFamily:FF,fontStyle:"italic"}}>Your membership unlocks all five AI tools inside the Creator Suite. Premium services are purchased separately.</p>
+
+            <div style=${{display:"inline-flex",background:"rgba(0,0,0,0.2)",borderRadius:50,padding:4,marginBottom:48,gap:4}}>
+              <button onClick=${()=>setYearlyBilling(false)}
+                style=${{background:yearlyBilling?"transparent":GD,color:IV,border:"none",cursor:"pointer",fontSize:12,fontWeight:600,padding:"10px 24px",borderRadius:50,fontFamily:FFB,letterSpacing:1,transition:"all 0.2s"}}>
+                Monthly
+              </button>
+              <button onClick=${()=>setYearlyBilling(true)}
+                style=${{background:yearlyBilling?GD:"transparent",color:yearlyBilling?IV:"rgba(250,246,240,0.5)",border:"none",cursor:"pointer",fontSize:12,fontWeight:600,padding:"10px 24px",borderRadius:50,fontFamily:FFB,letterSpacing:1,transition:"all 0.2s"}}>
+                Yearly <span style=${{fontSize:10,opacity:0.8}}>— save more</span>
+              </button>
+            </div>
 
             <div style=${{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(230px,1fr))",gap:16,marginBottom:20,textAlign:"left"}}>
               ${[
-                {key:"origins",name:"Origins",price:"$27",desc:"Full access to all five AI tools. Where your journey inside the Suite begins.",highlight:false},
-                {key:"studio",name:"Studio",price:"$47",desc:"All tools plus elevated generation quality and priority access for active creators.",highlight:false},
-                {key:"suite",name:"Suite",price:"$97",desc:"Everything in Studio. Built for creators who run their content and sales as a system.",highlight:true},
-                {key:"innerCircle",name:"Inner Circle",price:"$197",desc:"Full suite access plus Inner Circle community, direct support and early access to everything new.",highlight:false},
+                {key:"origins",name:"Origins",monthly:"$27",yearly:"$280",saving:"$44",monthlyEq:"$23/mo",
+                  benefits:["All 5 AI tools","Client Profile","Content Generator","DM Scripts","Email Builder","Go Live Plan"],
+                  highlight:false},
+                {key:"studio",name:"Studio",monthly:"$47",yearly:"$490",saving:"$74",monthlyEq:"$41/mo",
+                  benefits:["Everything in Origins","Priority generation quality","Advanced content systems","Creator community access"],
+                  highlight:false},
+                {key:"suite",name:"Suite",monthly:"$97",yearly:"$1,000",saving:"$164",monthlyEq:"$83/mo",
+                  benefits:["Everything in Studio","2 custom jingles (yearly)","20 ready-to-use prompt vaults (yearly)","Full sales messaging system"],
+                  highlight:true},
+                {key:"innerCircle",name:"Inner Circle",monthly:"$197",yearly:"$2,000",saving:"$364",monthlyEq:"$167/mo",
+                  benefits:["Everything in Suite","Creator Stylist included (yearly)","2 custom jingles up to 30 seconds (yearly)","Early access to all new features","Direct support","Inner Circle community"],
+                  highlight:false},
               ].map(t=>html`
                 <div key=${t.key} style=${{background:t.highlight?"rgba(160,112,48,0.2)":"rgba(0,0,0,0.2)",borderRadius:8,padding:"32px 24px",display:"flex",flexDirection:"column",border:t.highlight?"1px solid rgba(160,112,48,0.5)":"1px solid transparent",position:"relative"}}>
                   ${t.highlight&&html`<span style=${{position:"absolute",top:-10,left:"50%",transform:"translateX(-50%)",background:GD,color:IV,fontSize:8,fontWeight:700,letterSpacing:2,padding:"3px 12px",borderRadius:20,fontFamily:FFB,whiteSpace:"nowrap"}}>MOST POPULAR</span>`}
-                  <p style=${{fontSize:9,letterSpacing:3,color:GD,fontFamily:FFB,fontWeight:500,marginBottom:8}}>MONTHLY SUBSCRIPTION</p>
+                  <p style=${{fontSize:9,letterSpacing:3,color:GD,fontFamily:FFB,fontWeight:500,marginBottom:8}}>${yearlyBilling?"YEARLY":"MONTHLY"} SUBSCRIPTION</p>
                   <h3 style=${{fontSize:22,fontWeight:600,color:IV,fontFamily:FF,margin:"0 0 16px"}}>${t.name}</h3>
-                  <div style=${{display:"flex",alignItems:"baseline",gap:4,marginBottom:16}}>
-                    <span style=${{fontSize:38,fontWeight:700,color:GD,fontFamily:FFB,lineHeight:1}}>${t.price}</span>
-                    <span style=${{fontSize:12,color:"rgba(250,246,240,0.4)",fontFamily:FFB}}>/month</span>
+                  <div style=${{display:"flex",alignItems:"baseline",gap:4,marginBottom:4}}>
+                    <span style=${{fontSize:38,fontWeight:700,color:GD,fontFamily:FFB,lineHeight:1}}>${yearlyBilling?t.yearly:t.monthly}</span>
+                    <span style=${{fontSize:12,color:"rgba(250,246,240,0.4)",fontFamily:FFB}}>${yearlyBilling?"/year":"/month"}</span>
                   </div>
-                  <p style=${{fontSize:13,color:"rgba(250,246,240,0.6)",lineHeight:1.7,flex:1,marginBottom:24}}>${t.desc}</p>
+                  ${yearlyBilling&&html`<p style=${{fontSize:11,color:GD,fontFamily:FFB,marginBottom:8,opacity:0.8}}>Save ${t.saving} — ${t.monthlyEq}</p>`}
+                  <div style=${{marginBottom:24,flex:1}}>
+                    ${t.benefits.map(b=>html`<p key=${b} style=${{fontSize:13,color:"rgba(250,246,240,0.65)",lineHeight:1.6,margin:"4px 0",display:"flex",alignItems:"flex-start",gap:8}}><span style=${{color:GD,flexShrink:0}}>✓</span>${b}</p>`)}
+                  </div>
                   <button onClick=${()=>window.open(stanSub(t.key),"_blank")}
-                    style=${{background:t.highlight?GD:"rgba(160,112,48,0.3)",color:IV,border:t.highlight?"none":"1px solid rgba(160,112,48,0.4)",cursor:"pointer",fontSize:11,fontWeight:600,padding:"13px 20px",borderRadius:4,fontFamily:FFB,letterSpacing:1.5,width:"100%"}}>
+                    style=${{background:t.highlight?GD:"rgba(160,112,48,0.3)",color:IV,border:t.highlight?"none":"1px solid rgba(160,112,48,0.4)",cursor:"pointer",fontSize:13,fontWeight:600,padding:"13px 20px",borderRadius:4,fontFamily:FFB,letterSpacing:1.5,width:"100%"}}>
                     Join the Circle →
                   </button>
                 </div>`)}
             </div>
-            <p style=${{fontSize:11,color:"rgba(250,246,240,0.35)",fontFamily:FFB,marginBottom:80}}>Cancel anytime. All tiers unlock the same five AI tools.</p>
+            <p style=${{fontSize:13,color:"rgba(250,246,240,0.35)",fontFamily:FFB,marginBottom:80}}>Cancel anytime. Yearly benefits apply to annual subscriptions only.</p>
           </div>
         </section>
 
@@ -344,18 +371,56 @@ function App(){
 
             <!-- TOOL PAGE -->
       ${page==="tool"&&tool&&html`<main style=${{background:BG,position:"relative"}}>
-        ${!isMember&&html`
-          <div style=${{position:"fixed",inset:0,zIndex:50,display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(8px)",WebkitBackdropFilter:"blur(8px)",background:"rgba(244,237,226,0.55)"}}>
-            <div style=${{background:IV,border:`1px solid ${BO}`,borderRadius:12,padding:"52px 44px",textAlign:"center",maxWidth:420,margin:"0 20px",boxShadow:"0 24px 80px rgba(107,88,72,0.18)"}}>
-              <span style=${{fontSize:28,display:"block",marginBottom:16}}>🔐</span>
-              <p style=${{fontSize:9,letterSpacing:4,color:GD,fontFamily:FFB,fontWeight:500,marginBottom:8}}>PRIVATE SYSTEM</p>
-              <h2 style=${{fontSize:"clamp(22px,4vw,32px)",fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 14px"}}>Membership Required</h2>
-              <p style=${{fontSize:13,color:MT,lineHeight:1.8,marginBottom:32}}>This tool is part of the Inner Circle. Start your membership to unlock all five AI tools inside the Creator Suite.</p>
-              <button onClick=${()=>setPage("circle")}
-                style=${{background:ESP,color:IV,border:"none",cursor:"pointer",fontSize:12,fontWeight:600,padding:"14px 32px",borderRadius:4,fontFamily:FFB,letterSpacing:1.5,width:"100%",marginBottom:12}}>
-                Enter Inner Circle →
+        ${unlocking&&html`
+          <div style=${{position:"fixed",inset:0,zIndex:200,display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",background:"rgba(15,10,5,0.97)"}}>
+            <style>
+              @keyframes glowPulse{0%{filter:drop-shadow(0 0 4px #a07030);opacity:1}50%{filter:drop-shadow(0 0 60px #f0c060) drop-shadow(0 0 100px #a07030);opacity:1}100%{filter:drop-shadow(0 0 200px #fff8e0);opacity:0}}
+              @keyframes welcomeIn{0%{opacity:0;letter-spacing:12px}50%{opacity:1;letter-spacing:4px}100%{opacity:0;letter-spacing:4px}}
+              @keyframes shimmer{0%{opacity:0}30%{opacity:1}80%{opacity:1}100%{opacity:0}}
+              .glow-key{animation:glowPulse 2s ease-out forwards;}
+              .welcome-text{animation:welcomeIn 2.5s ease forwards;animation-delay:0.5s;opacity:0;}
+              .gold-shimmer{animation:shimmer 2.5s ease forwards;animation-delay:0.3s;opacity:0;}
+            </style>
+            <div class="gold-shimmer" style=${{position:"absolute",inset:0,background:"radial-gradient(ellipse at center, rgba(160,112,48,0.15) 0%, transparent 70%)"}}></div>
+            <svg class="glow-key" viewBox="0 0 40 56" width="64" height="90" fill="#a07030">
+              <ellipse cx="20" cy="16" rx="12" ry="12"/>
+              <ellipse cx="20" cy="16" rx="6" ry="6" fill="#0a0604"/>
+              <rect x="14" y="26" width="12" height="20" rx="2"/>
+              <rect x="18" y="34" width="4" height="8" rx="1" fill="#0a0604"/>
+            </svg>
+            <p class="welcome-text" style=${{fontSize:"clamp(18px,3vw,26px)",fontFamily:FF,fontWeight:600,color:"#f0c060",letterSpacing:4,marginTop:40,textAlign:"center"}}>Welcome to the Inner Circle</p>
+          </div>`}
+
+        ${!isMember&&!unlocking&&html`
+          <div style=${{position:"fixed",inset:0,zIndex:50,display:"flex",alignItems:"center",justifyContent:"center",backdropFilter:"blur(12px)",WebkitBackdropFilter:"blur(12px)",background:"rgba(250,246,240,0.88)"}}>
+            <div style=${{background:IV,border:`1px solid ${BO}`,borderRadius:8,padding:"48px 40px",textAlign:"center",maxWidth:400,margin:"0 20px",boxShadow:"0 24px 80px rgba(107,88,72,0.15)"}}>
+              <svg viewBox="0 0 40 56" width="36" height="50" fill="#a07030" style=${{margin:"0 auto 20px",display:"block"}}>
+                <ellipse cx="20" cy="16" rx="12" ry="12"/>
+                <ellipse cx="20" cy="16" rx="6" ry="6" fill="#fdfaf6"/>
+                <rect x="14" y="26" width="12" height="20" rx="2"/>
+                <rect x="18" y="34" width="4" height="8" rx="1" fill="#fdfaf6"/>
+              </svg>
+              <p style=${{fontSize:9,letterSpacing:5,color:GD,fontFamily:FFB,fontWeight:600,marginBottom:12}}>MEMBERS ONLY</p>
+              <h3 style=${{fontSize:22,fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 8px"}}>This space is reserved</h3>
+              <p style=${{fontSize:13,color:MT,lineHeight:1.7,marginBottom:28,fontFamily:FFB}}>Enter your Inner Circle access code to unlock.</p>
+              <input type="text" placeholder="INNERCIRCLE + DDMMYY" value=${unlockCode}
+                onInput=${e=>{setUnlockCode(e.target.value.toUpperCase());setUnlockErr("");}}
+                onKeyDown=${e=>{if(e.key==="Enter"){const c=unlockCode.trim();if(/^INNERCIRCLE\d{6}$/.test(c)){setUnlocking(true);setTimeout(()=>{localStorage.setItem("creator_member","true");setIsMember(true);setUnlocking(false);setUnlockCode("");},2800);}else{setUnlockErr("Incorrect code. Please try again.");}}}}
+                style=${{width:"100%",background:BG,border:`1px solid ${BO}`,borderRadius:4,padding:"13px 16px",fontSize:14,fontFamily:FFB,color:ESP,outline:"none",textAlign:"center",letterSpacing:4,boxSizing:"border-box",marginBottom:8}}/>
+              ${unlockErr&&html`<p style=${{fontSize:11,color:"#c04040",fontFamily:FFB,marginBottom:8}}>${unlockErr}</p>`}
+              <button onClick=${()=>{
+                const c=unlockCode.trim();
+                if(/^INNERCIRCLE\d{6}$/.test(c)){
+                  setUnlockErr("");
+                  setUnlocking(true);
+                  setTimeout(()=>{localStorage.setItem("creator_member","true");setIsMember(true);setUnlocking(false);setUnlockCode("");},2800);
+                }else{
+                  setUnlockErr("Incorrect code. Please try again.");
+                }
+              }} style=${{width:"100%",background:GD,color:IV,border:"none",cursor:"pointer",fontSize:13,fontWeight:600,padding:"14px",borderRadius:4,fontFamily:FFB,letterSpacing:2,marginBottom:16}}>
+                Unlock →
               </button>
-              <p style=${{fontSize:10,color:MT,fontFamily:FFB}}>Already a member? Add <code style=${{fontSize:10,background:BG,padding:"2px 6px",borderRadius:3}}>?member=true</code> to your URL.</p>
+              <button onClick=${()=>setPage("circle")} style=${{background:"none",border:"none",color:MT,cursor:"pointer",fontSize:11,fontFamily:FFB,letterSpacing:1}}>Join the Inner Circle →</button>
             </div>
           </div>`}
         <div style=${{maxWidth:1100,margin:"0 auto",padding:"40px 24px 80px",filter:isMember?"none":"blur(3px)",pointerEvents:isMember?"all":"none",userSelect:isMember?"all":"none"}}>
@@ -382,7 +447,6 @@ function App(){
               ${res&&!load&&html`<div style=${{background:CR,border:`1px solid ${BO}`,borderRadius:8,overflow:"hidden",boxShadow:"0 4px 20px rgba(107,88,72,0.06)"}}><div style=${{display:"flex",justifyContent:"space-between",alignItems:"center",padding:"14px 18px",borderBottom:`1px solid ${BO}`,background:BG}}><span style=${{fontSize:9,letterSpacing:3,color:GD,fontFamily:FFB,fontWeight:500}}>YOUR ${tool.nav.toUpperCase()}</span><button onClick=${copy} style=${{fontSize:11,color:GD,background:"none",border:`1px solid ${BO}`,cursor:"pointer",padding:"5px 12px",borderRadius:3,fontFamily:FFB}}>${cp?"✓ Copied":"Copy All"}</button></div><div style=${{padding:"24px 20px"}}><${TW} text=${res}/></div></div>`}
             </div>
           </div>
-        </div>
         </div>
       </main>`}
 
@@ -600,12 +664,24 @@ function App(){
 
                   ${vgErr&&html`<p style=${{fontSize:12,color:"#e07070",fontFamily:FFB}}>${vgErr}</p>`}
 
+                  ${vgNiche&&vgFlds.brand&&vgFlds.audience&&vgFlds.offer&&vgFlds.platform&&vgFlds.tone&&html`
+                    <div style=${{marginBottom:16}}>
+                      <p style=${{fontSize:9,letterSpacing:3,color:GD,marginBottom:10,fontFamily:FFB,fontWeight:500}}>HOW MANY PROMPTS DO YOU NEED?</p>
+                      <div style=${{display:"flex",gap:8}}>
+                        ${[10,20,40].map(n=>html`<button key=${n} onClick=${()=>setPromptCount(n)}
+                          style=${{flex:1,padding:"10px",borderRadius:4,cursor:"pointer",fontFamily:FFB,fontSize:13,fontWeight:600,
+                            background:promptCount===n?"rgba(160,112,48,0.9)":"rgba(255,255,255,0.07)",
+                            color:promptCount===n?IV:"rgba(250,246,240,0.7)",
+                            border:promptCount===n?"1px solid #a07030":"1px solid rgba(250,246,240,0.15)"}}>${n}</button>`)}
+                      </div>
+                    </div>`}
+
                   ${vgNiche&&html`<div style=${{display:"flex",alignItems:"center",gap:16,flexWrap:"wrap"}}>
                     <button onClick=${async()=>{
                       if(!vgFlds.brand.trim()||!vgFlds.audience.trim()||!vgFlds.offer.trim()||!vgFlds.platform||!vgFlds.tone){setVgErr("Please complete all fields.");return;}
                       setVgErr("");setVgLoad(true);
                       try{
-                        const r=await fetch("/.netlify/functions/vault-generator",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({niche:vgNiche,brand:vgFlds.brand,audience:vgFlds.audience,offer:vgFlds.offer,platform:vgFlds.platform,tone:vgFlds.tone})});
+                        const r=await fetch("/.netlify/functions/vault-generator",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({niche:vgNiche,brand:vgFlds.brand,audience:vgFlds.audience,offer:vgFlds.offer,platform:vgFlds.platform,tone:vgFlds.tone,promptCount})});
                         const d=await r.json();
                         if(!d.success)throw new Error(d.error||"Generation failed");
                         setVgRes(d.result);
@@ -613,7 +689,7 @@ function App(){
                       finally{setVgLoad(false);}
                     }} disabled=${vgLoad}
                       style=${{background:vgLoad?"rgba(160,112,48,0.4)":GD,color:IV,border:"none",cursor:vgLoad?"not-allowed":"pointer",fontSize:12,fontWeight:500,padding:"14px 36px",borderRadius:4,fontFamily:FFB,letterSpacing:1.5}}>
-                      ${vgLoad?"Generating your vault...":"Generate My 40 Prompts →"}
+                      ${vgLoad?"Generating your vault...":`Generate My ${promptCount} Prompts →`}
                     </button>
                     ${vgLoad&&html`<p style=${{fontSize:11,color:"rgba(250,246,240,0.5)",fontFamily:FFB}}>This takes about 15 seconds — we're building something good.</p>`}
                   </div>`}
