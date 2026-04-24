@@ -3,9 +3,13 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>The Creator Suite</title>
+  <title>Creator Suite</title>
   <meta name="description" content="A private system for creators who sell with precision"/>
-  <style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#f4ede2;}</style>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap"/>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap"/>
+  <style>*{box-sizing:border-box;margin:0;padding:0;}body{background:#f4ede2;font-family:'Jost',sans-serif;}</style>
 </head>
 <body>
   <div id="root"></div>
@@ -25,15 +29,30 @@ const IV="#faf6f0",BG="#f4ede2",CR="#fdfaf6",BO="#ddd0c0";
 const ESP="#6b5848",MID="#5a4535",MT="#8a7060",GD="#a07030",BUT="#9a7d68";
 
 const TOOLS=[
+  {id:"identity",nav:"Creator Identity",icon:"00",heading:"Creator Identity",subheading:"Define who you are as a creator before anything else.",
+   customFields:[
+     {key:"niche",label:"What space do you create in?",type:"select",options:["— Select —","Fashion","Beauty","Fitness & Health","Lifestyle","Business & Entrepreneurship","Finance & Wealth","Food & Cooking","Travel","Parenting & Family","Couples & Relationships","Faith & Spirituality","Comedy & Entertainment","Home & Interiors","Arts & Crafts","Gaming","Music","Education","Personal Development","UGC Creator","Other"]},
+     {key:"creatorType",label:"What type of creator are you?",type:"select",options:["— Select —","Educator — I teach and share knowledge","Entertainer — I make people laugh or feel good","Lifestyle — I share how I live","Business owner — I sell products or services","Coach or consultant — I help people transform","Storyteller — I share experiences and journeys","Motivator — I inspire and uplift","Behind the brand — faceless or product-led","Character or persona — I use an alter ego","I am still figuring it out"]},
+     {key:"visibility",label:"How do you feel comfortable appearing online?",type:"select",options:["— Select —","Full face on camera — I am the brand","Voice only — I speak but stay off camera","Faceless — text, graphics and aesthetics only","Using a character or persona","Behind the scenes — rarely showing myself","A mix — depends on the content"]},
+     {key:"enjoys",label:"What do you enjoy in your own time?",type:"select",options:["— Select —","Faith and worship","Reading","Walking and being in nature — slow living","Cooking and experimenting with food","Fashion and getting dressed up","Fitness and movement","Gaming","Art and creativity","Home decorating and interiors","Travelling and exploring","Spending time with family","Music — listening or making it","Watching romantic films","Watching documentaries or world events","Socialising and going out","Quiet time and slow living","Business and self-development","Beauty and self-care","Sports — watching or playing","Comedy and laughter"]},
+     {key:"values",label:"What matters most to you?",type:"select",options:["— Select —","Faith and spirituality","Family above everything","Authenticity and being real","Luxury and aspiration","Education and growth","Empowerment and lifting others","Humour and joy","Community and belonging","Health and wellness","Financial freedom","All of the above"]},
+     {key:"style",label:"How would you describe your vibe?",type:"select",options:["— Select —","Clean and minimal — simple, calm, intentional","Bold and colourful — loud, expressive, confident","Raw and real — unfiltered, honest, vulnerable","Soft and feminine — gentle, warm, elegant","Dark and editorial — moody, high fashion, dramatic","Warm and cosy — homely, inviting, safe","Professional and polished — sharp, credible, expert","Playful and fun — lighthearted, vibrant, energetic"]},
+     {key:"platform",label:"Where do you mainly want to show up?",type:"select",options:["— Select —","TikTok","Instagram","YouTube","Pinterest","Twitter / X","LinkedIn","Podcast","Blog or Newsletter","Multiple platforms","I have not decided yet"]},
+     {key:"audience",label:"Who do you create for?",type:"select",options:["— Select —","Women building a business or income online","Mums juggling family and ambition","Young women finding their identity","Men in business or finance","Couples building a life together","Parents looking for connection and support","People on a faith journey","People working on their fitness or health","People interested in fashion and beauty","People interested in home and lifestyle","Anyone who needs motivation and uplift","I am not sure yet"]},
+     {key:"goal",label:"What would success look like for you?",type:"select",options:["— Select —","Brand deals and sponsorships","Selling my own products or courses","Building a loyal community","Going viral and growing fast","Earning passive income","Being recognised as an expert in my space","Creative expression and being seen","All of the above"]},
+     {key:"incomeGoal",label:"How do you want to earn from your content?",type:"select",options:["— Select —","Brand partnerships and sponsorships","Selling my own digital or physical products","Affiliate marketing","Coaching or consulting","Online courses or memberships","Multiple income streams","I have not thought about it yet"]},
+     {key:"wontPost",label:"What would you never post?",type:"select",options:["— Select —","My face","My personal or home life","Controversial or political opinions","Explicit or suggestive content","Anything that feels like selling","Nothing — I am open to everything"]},
+   ],
+   prompt:(f)=>`You are a brand strategist for creators. Build a detailed Creator Identity profile based on these answers:\n- Space they create in: "${f.niche}"\n- Type of creator: "${f.creatorType||"Not specified"}"\n- How they show up online: "${f.visibility||"Not specified"}"\n- What they enjoy in their own time: "${f.enjoys||"Not specified"}"\n- What matters most to them: "${f.values||"Not specified"}"\n- Their content vibe and aesthetic: "${f.style||"Not specified"}"\n- Primary platform: "${f.platform||"Not specified"}"\n- Who they create for: "${f.audience||"Not specified"}"\n- What success looks like: "${f.goal||"Not specified"}"\n- How they want to earn: "${f.incomeGoal||"Not specified"}"\n- What they would never post: "${f.wontPost||"Not specified"}"\n\n**CREATOR ARCHETYPE** — What type of creator are they and why. Be specific.\n**YOUR UNIQUE CREATOR IDENTITY** — What makes this creator genuinely different from everyone else in their space. Be direct and specific — no generic statements.\n**CORE VALUES & WHAT YOU STAND FOR** — 5 values this creator should own publicly. For each: the value name + one powerful sentence on how it shows up in their content.\n**YOUR BRAND VOICE** — Describe their tone, energy and how they communicate. Include 6 phrases that feel authentic to them.\n**CONTENT PILLARS** — 5 core themes this creator should own. For each: pillar name, why it works for them specifically, and 3 content angle ideas with hooks.\n**WHAT YOU WILL AND WON'T BE** — A clear list of what this creator stands for and what they don't. This is their brand boundary.\n**HOW TO SHOW UP** — Based on their visibility preference (${f.visibility||"not specified"}), specific advice on how to build presence without compromising who they are.\n**DREAM COLLABORATIONS** — 5 specific brands or creators they should target for partnerships and why.\n**CREATOR MISSION STATEMENT** — One powerful sentence. Who they are, who they serve, and what change they create.\n**YOUR BIO** — Two versions: (1) Third person — for press, media kits and websites. (2) First person — for social profiles. Both under 80 words.\n\nBe specific, premium and strategic. This is not generic advice. Speak directly to this person's actual identity.`},
   {id:"persona",nav:"Client Profile",icon:"01",heading:"Client Profile",subheading:"Understand exactly who your ideal customer is.",
    prompt:(f)=>`Build a detailed buyer persona for someone selling "${f.offer}" to "${f.audience}" on ${f.platform}. Problem: "${f.problem}".\n\n**DEMOGRAPHICS** — Age, gender, income, occupation, location.\n**PAIN POINTS** — 5 specific daily frustrations.\n**DESIRES & GOALS** — 5 things they want to achieve.\n**BUYING TRIGGERS** — 5 things that push them to purchase.\n**WHERE TO FIND THEM ON ${f.platform.toUpperCase()}** — Hashtags, creators, formats.\n**HOW TO SPEAK TO THEM** — Vocabulary, tone, 5 phrases they use.\n**10 CONTENT ANGLES** — Scroll-stopping ideas with exact hooks.`},
-  {id:"content",nav:"Content Generator",icon:"02",heading:"Content Generator",subheading:"Create structured, high-performing content instantly.",
+  {id:"content",nav:"The Studio",icon:"02",heading:"The Studio",subheading:"Create structured, high-performing content instantly.",
    prompt:(f)=>`Generate a complete content plan for selling "${f.offer}" to "${f.audience}" on ${f.platform}. Problem: "${f.problem}".\n\n**5 CONTENT PILLARS** — Core topics to own.\n**10 VIDEO IDEAS** — Hook, angle, why it converts.\n**10 CAPTION HOOKS** — Ready to copy and post.\n**3 SERIES IDEAS** — Recurring formats that build audience.\n**5 TRENDING FORMATS** — What's working now on ${f.platform.toUpperCase()}.`},
-  {id:"dms",nav:"DM Scripts",icon:"03",heading:"DM Scripts",subheading:"Start conversations that naturally lead to sales.",
+  {id:"dms",nav:"Pitch",icon:"03",heading:"Pitch",subheading:"Start conversations that naturally lead to sales.",
    prompt:(f)=>`Write word-for-word DM scripts for selling "${f.offer}" to "${f.audience}" on ${f.platform}. Problem: "${f.problem}".\n\n**OPENING MESSAGE** — Natural, not salesy.\n**FOLLOW-UP (2-3 days later)** — Warm, not pushy.\n**WHEN THEY ASK "HOW MUCH?"** — Build value first.\n**WHEN THEY SAY "I'LL THINK ABOUT IT"** — Keep door open.\n**WHEN THEY SAY "I CAN'T AFFORD IT"** — Reframe value.\n**THE SOFT CLOSE** — 3 ways to ask without pressure.\n**AFTER THEY BUY** — Perfect welcome message.`},
-  {id:"email",nav:"Email Builder",icon:"04",heading:"Email Builder",subheading:"Write clear, persuasive emails without overthinking.",
+  {id:"email",nav:"Email Suite",icon:"04",heading:"Email Suite",subheading:"Write clear, persuasive emails without overthinking.",
    prompt:(f)=>`Write a 5-email sequence for selling "${f.offer}" to "${f.audience}" on ${f.platform}. Problem: "${f.problem}".\n\n**EMAIL 1 — WELCOME** Subject + preview + full body.\n**EMAIL 2 — VALUE** Pure value, no selling.\n**EMAIL 3 — STORY + PROOF** Transformation story.\n**EMAIL 4 — THE OFFER** Clear pitch, strong CTA.\n**EMAIL 5 — FOLLOW-UP** Address objections, final CTA.`},
-  {id:"live",nav:"Go Live Plan",icon:"05",heading:"Go Live Plan",subheading:"A structured blueprint so you know exactly what to say and when.",liveFields:true,
+  {id:"live",nav:"On Air",icon:"05",heading:"On Air",subheading:"A structured blueprint so you know exactly what to say and when.",liveFields:true,
    prompt:(f)=>`Build a complete live selling blueprint for selling "${f.offer}" to "${f.audience}" on ${f.platform}. Duration: ${f.duration||"1 hour"}. Goal: ${f.goal||"Get Sales"}.\n\n**PRE-LIVE HYPE (24hrs before)** — Exact posts and captions.\n**MINUTE BY MINUTE STRUCTURE** — Full ${f.duration||"1 hour"} breakdown.\n**10 ENGAGEMENT HOOKS** — Keep viewers watching.\n**THE PITCH SCRIPT** — Word-for-word offer presentation.\n**10 URGENCY PHRASES** — Drive sales in the moment.\n**HANDLING OBJECTIONS** — Too expensive / not sure / I'll think about it.\n**POST-LIVE FOLLOW-UP** — Capture missed sales.`},
 ];
 
@@ -48,13 +67,12 @@ const LIVE_F=[...BASE_F,
   {key:"goal",label:"What is your main goal?",type:"select",options:["— Select —","Get Sales on the Day","Build Know / Like / Trust","Grow My Audience","Launch a New Offer","Re-engage Cold Audience"]},
 ];
 
-const NT={background:"none",border:"none",cursor:"pointer",padding:"14px 10px",fontSize:13,color:MT,fontFamily:FFB,whiteSpace:"nowrap",letterSpacing:0.8,fontWeight:500,flexShrink:0};
+const NT={background:"none",border:"none",cursor:"pointer",padding:"14px 9px",fontSize:13,color:MT,fontFamily:FFB,whiteSpace:"nowrap",letterSpacing:0.5,fontWeight:500,flexShrink:0};
 const NA={color:ESP,fontWeight:600};
 const FI={width:"100%",background:IV,border:`1px solid ${BO}`,borderRadius:3,padding:"13px 15px",color:ESP,fontSize:13,fontFamily:FFB,outline:"none",appearance:"none"};
 const GB={width:"100%",background:BUT,color:IV,border:"none",borderRadius:3,padding:"15px",fontSize:13,fontWeight:500,cursor:"pointer",fontFamily:FFB,letterSpacing:2,marginBottom:10};
 
 const CSS=`
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400;1,500&family=Jost:wght@300;400;500;600&display=swap');
   *{box-sizing:border-box;margin:0;padding:0;} body{background:#f4ede2;}
   .tc:hover{transform:translateY(-3px);box-shadow:0 12px 36px rgba(107,88,72,0.1) !important;}
   .cta:hover{opacity:0.88;transform:translateY(-1px);transition:all .15s;}
@@ -64,41 +82,69 @@ const CSS=`
   .d2{animation-delay:.2s;}.d3{animation-delay:.4s;}
   input::placeholder{color:#c0b0a0;} select option{color:#6b5848;background:#faf6f0;}
   nav{scrollbar-width:none;} nav::-webkit-scrollbar{display:none;}
+  nav>div{scrollbar-width:none;} nav>div::-webkit-scrollbar{display:none;}
+  nav>div::after{content:"";position:absolute;right:0;top:0;bottom:0;width:48px;background:linear-gradient(to right,transparent,${IV});pointer-events:none;z-index:2;}
   nav button{position:relative;} 
-  nav div{align-items:stretch;}
+  nav div{align-items:center;}
   .out{white-space:pre-wrap;font-family:Georgia,serif;font-size:14px;line-height:2;color:#6b5848;}
 `;
 
 // ── All AI calls go through Netlify Functions ─────────────────
 async function callAPI(prompt){
   const r=await fetch("/.netlify/functions/claude-generate",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({prompt})});
+  const ct=r.headers.get("content-type")||"";
+  if(!ct.includes("application/json")){
+    const txt=await r.text();
+    throw new Error("Server error ("+r.status+"). Check that your Netlify function is deployed and your OPENAI_API_KEY is set in Netlify environment variables.");
+  }
   const d=await r.json();
   if(!d.success)throw new Error(d.error||"Generation failed — check Netlify function logs");
   return d.result;
 }
 
-// ── STAN STORE LINKS — paste your exact URLs here ─────────────────────────
+// ── STAN STORE LINKS ─────────────────────────────────────────────────────────
+// Paste your exact Stan Store product/subscription URLs below.
+// Subscriptions unlock the AI tools. Premium products are separate one-time purchases.
+// ─────────────────────────────────────────────────────────────────────────────
+
 const STAN_SUBSCRIPTIONS={
-  origins:"",
-  studio:"",
-  suite:"",
-  innerCircle:""
+  theClique:"",      // Stan link for The Clique — $3,497 lifetime
+  innerCircle:"",    // Stan link for Inner Circle — $197/mo or $2,000/yr
+  suite:"",          // Stan link for Suite — $97/mo or $1,000/yr
+  studio:"",         // Stan link for Studio — $47/mo or $490/yr
+  origins:""         // Stan link for Origins — $27/mo or $280/yr
 };
+
 const STAN_PREMIUM={
-  lifestyleVault:"",
-  businessVault:"",
-  beautyFashionVault:"",
-  fitnessHealthVault:"",
-  couplesVault:"",
-  parentingVault:"",
-  financeVault:"",
-  fullVaultBundle:"",
-  influencerBatch:"",
-  musicJingles:"",
-  creatorStylist:""
+  lifestyleVault:"",      // $47 one-time
+  businessVault:"",       // $47 one-time
+  beautyFashionVault:"",  // $47 one-time
+  fitnessHealthVault:"",  // $47 one-time
+  couplesVault:"",        // $27 one-time
+  parentingVault:"",      // $27 one-time
+  financeVault:"",        // $37 one-time
+  fullVaultBundle:"",     // $197 one-time — all 7 vaults
+  influencerBatch:"",     // $197 one-time — batch of 20 images
+  musicJingles:"",        // varies — custom music orders
+  creatorStylist:""       // $200 one-time
+  creatorIdentity:""       // $40 one-time
 };
-const stanSub=(key)=>STAN_SUBSCRIPTIONS[key]||"https://stan.store/thecreatorsuite";
-const stanPrem=(key)=>STAN_PREMIUM[key]||"https://stan.store/thecreatorsuite";
+
+// Routes subscription clicks — shows alert if link not yet added
+const stanSub=(key)=>{
+  const url=STAN_SUBSCRIPTIONS[key];
+  if(url)return url;
+  alert("Membership link coming soon. Check back shortly.");
+  return null;
+};
+
+// Routes premium purchase clicks — shows alert if link not yet added
+const stanPrem=(key)=>{
+  const url=STAN_PREMIUM[key];
+  if(url)return url;
+  alert("Purchase link coming soon. Check back shortly.");
+  return null;
+};
 
 function TW({text}){
   const [s,setS]=useState("");const [done,setDone]=useState(false);
@@ -129,9 +175,16 @@ function App(){
   const [st,setSt]=useState({category:"",platform:"",gender:"",ageRange:"",ethnicity:"",hairColor:"",hairHighlights:"",hairStyle:"",outfit:"",location:"",skin:"",undertone:"",aesthetic:"",goal:"",extra:""});
   const [stLoad,setStLoad]=useState(false);
   const [stRes,setStRes]=useState("");
+  const [stSections,setStSections]=useState(null);
   const [stErr,setStErr]=useState("");
   const [stCp,setStCp]=useState(false);
   const [stPhase,setStPhase]=useState("");
+  const [stStyle,setStStyle]=useState("vivid");
+  const [stImg,setStImg]=useState("");
+  const [stImgFmt,setStImgFmt]=useState("");
+  const [stImgModel,setStImgModel]=useState("");
+  const [stImgLoad,setStImgLoad]=useState(false);
+  const [stImgErr,setStImgErr]=useState("");
   const [isMember,setIsMember]=useState(()=>{
     try{
       if(new URLSearchParams(window.location.search).get("member")==="true"){
@@ -158,7 +211,7 @@ function App(){
   const ref=useRef(null);
 
   const goTool=(t)=>{setTool(t);setFlds({});setRes("");setErr("");setPage("tool");window.scrollTo({top:0,behavior:"smooth"});};
-  const af=tool?.liveFields?LIVE_F:BASE_F;
+  const af=tool?.customFields?tool.customFields:tool?.liveFields?LIVE_F:BASE_F;
 
   const generate=async()=>{
     for(const f of af){const v=flds[f.key];if(!v||!v.trim()||v==="— Select —"){setErr(`Please complete: ${f.label}`);return;}}
@@ -172,30 +225,30 @@ function App(){
 
   const nb=(label,pg,tid)=>{
     const active=tid?tool?.id===tid&&page==="tool":page===pg;
-    return html`<button onClick=${()=>tid?goTool(TOOLS.find(t=>t.id===tid)):setPage(pg)} style=${{...NT,...(active?NA:{}),boxShadow:active?"inset 0 -2px 0 #a07030":"none",fontSize:13}}>${tid==="live"&&html`<span style=${{color:"#c04040",fontSize:7,marginRight:2}}>●</span>`}${label}</button>`;
+    return html`<button onClick=${()=>tid?goTool(TOOLS.find(t=>t.id===tid)):setPage(pg)} style=${{...NT,...(active?NA:{}),boxShadow:active?"inset 0 -2px 0 #a07030":"none"}}>${tid==="live"&&html`<span style=${{color:"#c04040",fontSize:7,marginRight:2}}>●</span>`}${label}</button>`;
   };
 
-  const buyBtn=(label,key)=>html`<button class="cta" onClick=${()=>window.open(stanPrem(key||"musicJingles"),"_blank")} style=${{background:BUT,color:IV,border:"none",cursor:"pointer",fontSize:10,padding:"6px 12px",borderRadius:3,fontFamily:FFB,letterSpacing:1}}>${label||"Purchase →"}</button>`;
+  const buyBtn=(label,key)=>html`<button class="cta" onClick=${()=>{const u=stanPrem(key||"musicJingles");if(u)window.open(u,"_blank");}} style=${{background:BUT,color:IV,border:"none",cursor:"pointer",fontSize:10,padding:"6px 12px",borderRadius:3,fontFamily:FFB,letterSpacing:1}}>${label||"Purchase →"}</button>`;
 
-  const vaultBtn=(key)=>html`<button class="cta" onClick=${()=>window.open(stanPrem(key||"fullVaultBundle"),"_blank")} style=${{background:GD,color:IV,border:"none",cursor:"pointer",fontSize:10,padding:"6px 12px",borderRadius:3,fontFamily:FFB,letterSpacing:1}}>Get Vault →</button>`;
+  const vaultBtn=(key)=>html`<button class="cta" onClick=${()=>{const u=stanPrem(key||"fullVaultBundle");if(u)window.open(u,"_blank");}} style=${{background:GD,color:IV,border:"none",cursor:"pointer",fontSize:10,padding:"6px 12px",borderRadius:3,fontFamily:FFB,letterSpacing:1}}>Get Vault →</button>`;
 
   return html`
     <div style=${{fontFamily:FFB,background:BG,color:ESP,minHeight:"100vh"}}>
       <style>${CSS}</style>
 
       <!-- NAV -->
-      <nav style=${{background:IV,position:"sticky",top:0,zIndex:100,boxShadow:"0 2px 8px rgba(107,88,72,0.06)",borderBottom:`1px solid ${BO}`}}>
-        <div style=${{maxWidth:1200,margin:"0 auto",padding:"0 20px",display:"flex",alignItems:"center",overflowX:"auto"}}>
-          <button onClick=${()=>setPage("home")} style=${{background:"none",border:"none",cursor:"pointer",fontSize:11,fontWeight:600,color:ESP,fontFamily:FF,letterSpacing:2,padding:"16px 16px 16px 0",whiteSpace:"nowrap",borderRight:`1px solid ${BO}`,marginRight:12,flexShrink:0}}>Creator Suite</button>
-          <div style=${{display:"flex",alignItems:"center"}}>
+      <nav style=${{background:IV,position:"sticky",top:0,zIndex:100,boxShadow:"0 2px 8px rgba(107,88,72,0.06)"}}>
+        <div style=${{maxWidth:"100%",margin:"0 auto",padding:"0 20px",display:"flex",alignItems:"center",overflowX:"auto",position:"relative"}}>
+          <button onClick=${()=>setPage("home")} style=${{background:"none",border:"none",cursor:"pointer",fontSize:11.5,fontWeight:600,color:ESP,fontFamily:FF,letterSpacing:2,padding:"16px 14px 16px 0",whiteSpace:"nowrap",borderRight:`1px solid ${BO}`,marginRight:10,flexShrink:0}}>Creator Suite</button>
+          <div style=${{display:"flex",alignItems:"center",flex:1,justifyContent:"space-between"}}>
             ${nb("Home","home")}
             ${nb("The Suite","suite")}
             ${nb("Inner Circle","circle")}
             ${TOOLS.map(t=>nb(t.nav,null,t.id))}
-            ${(()=>{const a=page==="vaults";return html`<button onClick=${()=>setPage("vaults")} style=${{...NT,...(a?NA:{}),display:"flex",flexDirection:"column",alignItems:"center",gap:1,padding:"11px 10px",boxShadow:a?"inset 0 -2px 0 #a07030":"none"}}><span style=${{fontSize:8,fontWeight:700,color:GD,letterSpacing:1.5,lineHeight:1,fontFamily:FFB}}>PREMIUM</span><span style=${{fontSize:13,letterSpacing:0.8,lineHeight:1.4,fontFamily:FFB,color:a?ESP:MT,fontWeight:a?600:500}}>Prompt Vaults</span></button>`})()}
-            ${(()=>{const a=page==="influencers";return html`<button onClick=${()=>setPage("influencers")} style=${{...NT,...(a?NA:{}),display:"flex",flexDirection:"column",alignItems:"center",gap:1,padding:"11px 10px",boxShadow:a?"inset 0 -2px 0 #a07030":"none"}}><span style=${{fontSize:8,fontWeight:700,color:GD,letterSpacing:1.5,lineHeight:1,fontFamily:FFB}}>PREMIUM</span><span style=${{fontSize:13,letterSpacing:0.8,lineHeight:1.4,fontFamily:FFB,color:a?ESP:MT,fontWeight:a?600:500}}>Influencers</span></button>`})()}
-            ${(()=>{const a=page==="music";return html`<button onClick=${()=>setPage("music")} style=${{...NT,...(a?NA:{}),display:"flex",flexDirection:"column",alignItems:"center",gap:1,padding:"11px 10px",boxShadow:a?"inset 0 -2px 0 #a07030":"none"}}><span style=${{fontSize:8,fontWeight:700,color:GD,letterSpacing:1.5,lineHeight:1,fontFamily:FFB}}>PREMIUM</span><span style=${{fontSize:13,letterSpacing:0.8,lineHeight:1.4,fontFamily:FFB,color:a?ESP:MT,fontWeight:a?600:500}}>Music & Jingles</span></button>`})()}
-            ${(()=>{const a=page==="stylist";return html`<button onClick=${()=>setPage("stylist")} style=${{...NT,...(a?NA:{}),display:"flex",flexDirection:"column",alignItems:"center",gap:1,padding:"11px 10px",boxShadow:a?"inset 0 -2px 0 #a07030":"none"}}><span style=${{fontSize:8,fontWeight:700,color:GD,letterSpacing:1.5,lineHeight:1,fontFamily:FFB}}>PREMIUM</span><span style=${{fontSize:13,letterSpacing:0.8,lineHeight:1.4,fontFamily:FFB,color:a?ESP:MT,fontWeight:a?600:500}}>Creator Stylist</span></button>`})()}
+            ${(()=>{const a=page==="vaults";return html`<button onClick=${()=>setPage("vaults")} style=${{...NT,...(a?NA:{}),padding:"14px 6px",boxShadow:a?"inset 0 -2px 0 #a07030":"none",fontWeight:a?600:500}}><span style=${{color:"#5a5248",fontSize:10.5,marginRight:3}}>◆</span><span style=${{fontSize:13,color:a?ESP:MT}}>Prompt Vault</span></button>`})()}
+            ${(()=>{const a=page==="influencers";return html`<button onClick=${()=>setPage("influencers")} style=${{...NT,...(a?NA:{}),padding:"14px 6px",boxShadow:a?"inset 0 -2px 0 #a07030":"none",fontWeight:a?600:500}}><span style=${{color:"#5a5248",fontSize:10.5,marginRight:3}}>◆</span><span style=${{fontSize:13,color:a?ESP:MT}}>Icons</span></button>`})()}
+            ${(()=>{const a=page==="music";return html`<button onClick=${()=>setPage("music")} style=${{...NT,...(a?NA:{}),padding:"14px 6px",boxShadow:a?"inset 0 -2px 0 #a07030":"none",fontWeight:a?600:500}}><span style=${{color:"#5a5248",fontSize:10.5,marginRight:3}}>◆</span><span style=${{fontSize:13,color:a?ESP:MT}}>Music & Jingles</span></button>`})()}
+            ${(()=>{const a=page==="stylist";return html`<button onClick=${()=>setPage("stylist")} style=${{...NT,...(a?NA:{}),padding:"14px 6px",boxShadow:a?"inset 0 -2px 0 #a07030":"none",fontWeight:a?600:500}}><span style=${{color:"#5a5248",fontSize:10.5,marginRight:3}}>◆</span><span style=${{fontSize:13,color:a?ESP:MT}}>Creator Stylist</span></button>`})()}
           </div>
         </div>
       </nav>
@@ -205,7 +258,7 @@ function App(){
         <section style=${{position:"relative",minHeight:"100vh",display:"flex",alignItems:"center",overflow:"hidden",backgroundImage:`url(${ROOM})`,backgroundSize:"cover",backgroundPosition:"center"}}>
           <div style=${{position:"absolute",inset:0,background:"linear-gradient(105deg,rgba(244,237,226,0.82) 0%,rgba(244,237,226,0.62) 48%,rgba(244,237,226,0.12) 100%)"}}></div>
           <div style=${{position:"relative",zIndex:1,maxWidth:1100,margin:"0 auto",padding:"140px 44px 60px",width:"100%"}}>
-            <h1 style=${{fontSize:"clamp(44px,7vw,80px)",fontWeight:400,color:"rgba(107,88,72,0.55)",margin:"0 0 18px",fontFamily:FF,lineHeight:1.05}}>The Creator Suite</h1>
+            <h1 style=${{fontSize:"clamp(36px,5vw,62px)",fontWeight:600,color:"rgba(107,88,72,0.75)",margin:"0 0 18px",fontFamily:FF,lineHeight:1.05}}>Creator Suite</h1>
             <p style=${{fontSize:"clamp(16px,2vw,21px)",color:MID,fontStyle:"italic",fontFamily:FF,margin:"0 0 12px"}}>A private system for creators who sell with precision</p>
             <p style=${{fontSize:13,color:MT,lineHeight:1.9,maxWidth:400,margin:"0 0 44px"}}>Create content, messaging and sales systems in minutes</p>
             <button onClick=${()=>setPage("suite")} class="cta" style=${{background:BUT,color:IV,border:"none",cursor:"pointer",fontSize:14,fontWeight:500,padding:"17px 48px",borderRadius:4,fontFamily:FFB,letterSpacing:2,boxShadow:"0 6px 28px rgba(107,88,72,0.28)"}}>Enter the Suite →</button>
@@ -215,7 +268,7 @@ function App(){
           <div style=${{maxWidth:760,margin:"0 auto",textAlign:"center"}}>
             <p style=${{fontSize:9,letterSpacing:6,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>WELCOME</p>
             <h2 style=${{fontSize:"clamp(22px,4vw,36px)",fontWeight:600,color:ESP,margin:"0 0 12px",fontFamily:FF}}>A message from Sibyl</h2>
-            <p style=${{fontSize:14,color:MT,lineHeight:1.8,marginBottom:32}}>Before you begin — watch how the Creator Suite will change the way you create and sell.</p>
+            <p style=${{fontSize:14,color:MT,lineHeight:1.8,marginBottom:32}}>Before you begin — watch how Creator Suite will change the way you create and sell.</p>
             <div style=${{width:"100%",aspectRatio:"16/9",borderRadius:8,overflow:"hidden",border:`1px solid ${BO}`,background:"#ede6db",marginBottom:18}}>
               ${vidId?html`<iframe style=${{width:"100%",height:"100%",border:"none"}} src=${`https://www.youtube.com/embed/${vidId}`} title="Welcome" allowFullScreen=${true}></iframe>`:html`<div style=${{width:"100%",height:"100%",display:"flex",flexDirection:"column",alignItems:"center",justifyContent:"center",gap:12}}><span style=${{fontSize:32,opacity:.1}}>▶</span><p style=${{fontSize:11,color:MT,letterSpacing:2,fontFamily:FFB}}>PASTE YOUR YOUTUBE LINK BELOW</p></div>`}
             </div>
@@ -234,9 +287,9 @@ function App(){
             <div style=${{flex:"0 0 350px",minWidth:250}}><img src=${SIBYL} alt="Sibyl" style=${{width:"100%",borderRadius:4,objectFit:"cover",objectPosition:"center top",maxHeight:460,display:"block",boxShadow:"0 20px 60px rgba(107,88,72,0.14)"}}/></div>
             <div style=${{flex:1,minWidth:250}}>
               <p style=${{fontSize:9,letterSpacing:6,color:GD,marginBottom:18,fontFamily:FFB,fontWeight:500}}>INSIDE THE SUITE</p>
-              <h2 style=${{fontSize:"clamp(24px,4vw,46px)",fontWeight:600,color:ESP,margin:"0 0 20px",fontFamily:FF,lineHeight:1.1}}>This is where structure meets execution</h2>
+              <h2 style=${{fontSize:"clamp(20px,3vw,36px)",fontWeight:600,color:ESP,margin:"0 0 20px",fontFamily:FF,lineHeight:1.1}}>Where structure meets execution</h2>
               <p style=${{fontSize:15,color:MID,lineHeight:1.9,marginBottom:14,fontFamily:FF,fontStyle:"italic"}}>Everything inside the Suite is designed to simplify how you create, communicate and sell</p>
-              <p style=${{fontSize:13,color:MT,lineHeight:1.9,maxWidth:420,marginBottom:28}}>No more guessing what to post or how to follow up. The Creator Suite gives you the exact words and systems used by creators who close consistently.</p>
+              <p style=${{fontSize:13,color:MT,lineHeight:1.9,maxWidth:420,marginBottom:28}}>No more guessing what to post or how to follow up. Creator Suite gives you the exact words and systems used by creators who close consistently.</p>
               <button onClick=${()=>goTool(TOOLS[0])} class="cta" style=${{background:BUT,color:IV,border:"none",cursor:"pointer",fontSize:13,fontWeight:500,padding:"13px 28px",borderRadius:4,fontFamily:FFB,letterSpacing:2}}>Time to Create →</button>
             </div>
           </div>
@@ -244,10 +297,19 @@ function App(){
         <section style=${{background:BG,padding:"68px 28px 90px"}}>
           <div style=${{maxWidth:1100,margin:"0 auto"}}>
             <p style=${{fontSize:9,letterSpacing:6,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>EVERYTHING INSIDE THE SUITE</p>
-            <h2 style=${{fontSize:"clamp(24px,4vw,44px)",fontWeight:600,color:ESP,margin:"0 0 10px",fontFamily:FF}}>Built for Creators Who Move with Precision</h2>
-            <p style=${{fontSize:14,color:MT,marginBottom:44,lineHeight:1.8}}>Five AI tools. Four premium services. One private system.</p>
+            <h2 style=${{fontSize:"clamp(20px,3vw,36px)",fontWeight:600,color:ESP,margin:"0 0 10px",fontFamily:FF}}>Built for Creators</h2>
+            <p style=${{fontSize:14,color:MT,marginBottom:44,lineHeight:1.8}}>Six AI tools. Four premium services. One private system.</p>
+
             <div style=${{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(190px,1fr))",gap:16}}>
-              ${TOOLS.map(t=>html`<button key=${t.id} onClick=${()=>goTool(t)} class="tc" style=${{background:CR,border:`1px solid ${BO}`,borderRadius:6,padding:"28px 22px",cursor:"pointer",textAlign:"left",display:"flex",flexDirection:"column",boxShadow:"0 2px 12px rgba(107,88,72,0.05)"}}><span style=${{fontSize:10,color:GD,letterSpacing:3,fontFamily:FFB,fontWeight:500,marginBottom:18,display:"block"}}>${t.icon}${t.id==="live"&&html`<span style=${{color:"#c04040",marginLeft:5,fontSize:9}}>●</span>`}</span><h3 style=${{fontSize:15,fontWeight:500,color:ESP,margin:"0 0 8px",fontFamily:FF,lineHeight:1.3}}>${t.heading}</h3><p style=${{fontSize:12,color:MT,lineHeight:1.7,margin:"0 0 20px",flex:1}}>${t.subheading}</p><span style=${{fontSize:10,color:GD,letterSpacing:2,fontWeight:500}}>Open →</span></button>`)}
+              ${TOOLS.filter(t=>t.id!=="identity").map(t=>html`<div key=${t.id} style=${{background:CR,border:`1px solid ${BO}`,borderRadius:6,padding:"28px 22px",textAlign:"left",display:"flex",flexDirection:"column",boxShadow:"0 2px 12px rgba(107,88,72,0.05)"}}><span style=${{fontSize:10,color:GD,letterSpacing:3,fontFamily:FFB,fontWeight:500,marginBottom:18,display:"block"}}>${t.icon}</span><h3 style=${{fontSize:15,fontWeight:500,color:ESP,margin:"0 0 8px",fontFamily:FF,lineHeight:1.3}}>${t.heading}</h3><p style=${{fontSize:13,color:MT,lineHeight:1.7,margin:0,flex:1}}>${t.subheading}</p></div>`)}
+            </div>
+
+            <!-- JOIN CTA -->
+            <div style=${{textAlign:"center",marginTop:48,padding:"40px 24px",background:CR,borderRadius:8,border:`1px solid ${BO}`}}>
+              <p style=${{fontSize:9,letterSpacing:5,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>READY TO BEGIN</p>
+              <h3 style=${{fontSize:"clamp(20px,3vw,32px)",fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 12px"}}>Created for those inside</h3>
+              <p style=${{fontSize:13,color:MT,lineHeight:1.8,maxWidth:440,margin:"0 auto 28px"}}>Join the Inner Circle and get instant access to all six AI tools plus your premium services.</p>
+              <button onClick=${()=>setPage("circle")} class="cta" style=${{background:BUT,color:IV,border:"none",cursor:"pointer",fontSize:13,fontWeight:500,padding:"14px 32px",borderRadius:4,fontFamily:FFB,letterSpacing:2}}>Join the Inner Circle →</button>
             </div>
 
             <!-- PREMIUM SERVICES -->
@@ -255,21 +317,21 @@ function App(){
               <p style=${{fontSize:9,letterSpacing:5,color:GD,marginBottom:20,fontFamily:FFB,fontWeight:500}}>PREMIUM SERVICES</p>
               <div style=${{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:16}}>
                 ${[
-                  {label:"Prompt Vaults",icon:"◈",desc:"40 personalised content prompts built for your niche, platform and audience. Quietly powered by the same intelligence behind The Creator Stylist.",tag:"From $27",page:"vaults"},
-                  {label:"Influencers",icon:"◉",desc:"Curated batches of 20 influencer images representing your brand across ethnicities, ages and styles.",tag:"From $97",page:"influencers"},
+                  {label:"Prompt Vault",icon:"◈",desc:"10, 20 or 40 personalised content prompts based on your membership tier — built for your niche, platform and audience.",tag:"From $47",page:"vaults"},
+                  {label:"Icons",icon:"◉",desc:"Curated batches of 20 influencer images representing your brand across ethnicities, ages and styles.",tag:"From $97",page:"influencers"},
                   {label:"Music & Jingles",icon:"♪",desc:"Original music crafted for your brand — podcast intros, creator sounds, custom songs and special occasion pieces.",tag:"From $147",page:"music"},
-                  {label:"The Creator Stylist",icon:"✦",desc:"AI-generated visual styling prompts built around your look, aesthetic and platform. Paste directly into any image tool.",tag:"Early Access $150",page:"stylist"},
+                  {label:"Creator Stylist",icon:"✦",desc:"AI-generated visual styling prompts built around your look, aesthetic and platform. Paste directly into any image tool.",tag:"$200 — one time",page:"stylist"},
+                  {label:"Creator Identity",icon:"◇",desc:"Know who you are before you create anything. Your brand, your voice, your mission — defined. Available from Elevate and above, or as a one-time purchase.",tag:"$40 — one time",page:"identity"},
                 ].map(s=>html`
-                  <div key=${s.label} onClick=${()=>setPage(s.page)} style=${{background:ESP,borderRadius:6,padding:"28px 22px",cursor:"pointer",display:"flex",flexDirection:"column",boxShadow:"0 2px 12px rgba(107,88,72,0.1)"}}>
+                  <div key=${s.label} style=${{background:ESP,borderRadius:6,padding:"28px 22px",display:"flex",flexDirection:"column",boxShadow:"0 2px 12px rgba(107,88,72,0.1)"}}>
                     <div style=${{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:18}}>
                       <span style=${{fontSize:16,color:GD}}>${s.icon}</span>
                       <span style=${{fontSize:8,color:GD,letterSpacing:2,fontFamily:FFB,fontWeight:600,border:"1px solid rgba(160,112,48,0.4)",padding:"3px 8px",borderRadius:2}}>PREMIUM</span>
                     </div>
                     <h3 style=${{fontSize:15,fontWeight:500,color:IV,margin:"0 0 8px",fontFamily:FF,lineHeight:1.3}}>${s.label}</h3>
-                    <p style=${{fontSize:12,color:"rgba(250,246,240,0.6)",lineHeight:1.7,margin:"0 0 20px",flex:1}}>${s.desc}</p>
+                    <p style=${{fontSize:13,color:"rgba(250,246,240,0.6)",lineHeight:1.7,margin:"0 0 20px",flex:1}}>${s.desc}</p>
                     <div style=${{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
                       <span style=${{fontSize:11,color:GD,fontFamily:FF,fontWeight:600}}>${s.tag}</span>
-                      <span style=${{fontSize:10,color:"rgba(250,246,240,0.5)",letterSpacing:2,fontWeight:500}}>Open →</span>
                     </div>
                   </div>`)}
               </div>
@@ -291,7 +353,7 @@ function App(){
             </svg>
             <p style=${{fontSize:9,letterSpacing:6,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>MEMBERSHIP</p>
             <h1 style=${{fontSize:"clamp(28px,5vw,52px)",fontWeight:600,color:IV,fontFamily:FF,margin:"0 0 16px",lineHeight:1.1}}>Inner Circle</h1>
-            <p style=${{fontSize:15,color:"rgba(250,246,240,0.7)",maxWidth:520,margin:"0 auto 40px",lineHeight:1.8,fontFamily:FF,fontStyle:"italic"}}>Your membership unlocks all five AI tools inside the Creator Suite. Premium services are purchased separately.</p>
+            <p style=${{fontSize:15,color:"rgba(250,246,240,0.7)",maxWidth:520,margin:"0 auto 40px",lineHeight:1.8,fontFamily:FF,fontStyle:"italic"}}>Your membership unlocks all six AI tools inside Creator Suite. Premium services are purchased separately.</p>
 
             <div style=${{display:"inline-flex",background:"rgba(0,0,0,0.2)",borderRadius:50,padding:4,marginBottom:48,gap:4}}>
               <button onClick=${()=>setYearlyBilling(false)}
@@ -306,63 +368,77 @@ function App(){
 
             <div style=${{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(230px,1fr))",gap:16,marginBottom:20,textAlign:"left"}}>
               ${[
-                {key:"origins",name:"Origins",monthly:"$27",yearly:"$280",saving:"$44",monthlyEq:"$23/mo",
-                  benefits:["All 5 AI tools","Client Profile","Content Generator","DM Scripts","Email Builder","Go Live Plan"],
+                {key:"theClique",name:"The Clique",price:"$3,497",isLifetime:true,
+                  benefits:["Lifetime access to all current Creator Suite tools","Creator Identity","Client Profile","The Studio","Pitch","Email Suite","● On Air","Prompt Vault","Creator Stylist","Icons","Music & Jingles","Future tools at permanent member discount","Founding Clique member status"],
+                  note:"",
                   highlight:false},
-                {key:"studio",name:"Studio",monthly:"$47",yearly:"$490",saving:"$74",monthlyEq:"$41/mo",
-                  benefits:["Everything in Origins","Priority generation quality","Advanced content systems","Creator community access"],
+                {key:"innerCircle",name:"Inner Circle",monthly:"$197",yearly:"$2,000",saving:"$364",monthlyEq:"$167/mo",
+                  benefits:["Everything in Suite","Creator Stylist included yearly","2 custom jingles up to 30 seconds yearly","Early access to every new feature","10% discount on all Creator Suite and Aiya's Universe releases","First access to new tools and drops","Founding member of the Inner Circle Skool community"],
                   highlight:false},
                 {key:"suite",name:"Suite",monthly:"$97",yearly:"$1,000",saving:"$164",monthlyEq:"$83/mo",
-                  benefits:["Everything in Studio","2 custom jingles (yearly)","20 ready-to-use prompt vaults (yearly)","Full sales messaging system"],
+                  benefits:["Everything in Studio","2 custom jingles per year","20 prompt vaults per year","Full sales messaging system","Priority support"],
                   highlight:true},
-                {key:"innerCircle",name:"Inner Circle",monthly:"$197",yearly:"$2,000",saving:"$364",monthlyEq:"$167/mo",
-                  benefits:["Everything in Suite","Creator Stylist included (yearly)","2 custom jingles up to 30 seconds (yearly)","Early access to all new features","Direct support","Inner Circle community"],
+                {key:"studio",name:"Elevate",monthly:"$47",yearly:"$490",saving:"$74",monthlyEq:"$41/mo",
+                  benefits:["Creator Identity — know who you are before you create","Everything in Origins","Priority generation quality","Advanced content systems","Creator community access","Quarterly strategy drop"],
+                  highlight:false},
+                {key:"origins",name:"Origins",monthly:"$27",yearly:"$280",saving:"$44",monthlyEq:"$23/mo",
+                  benefits:["Client Profile","The Studio","Pitch","Email Suite","● On Air","Yearly bonus: 5 free prompts"],
                   highlight:false},
               ].map(t=>html`
-                <div key=${t.key} style=${{background:t.highlight?"rgba(160,112,48,0.2)":"rgba(0,0,0,0.2)",borderRadius:8,padding:"32px 24px",display:"flex",flexDirection:"column",border:t.highlight?"1px solid rgba(160,112,48,0.5)":"1px solid transparent",position:"relative"}}>
-                  ${t.highlight&&html`<span style=${{position:"absolute",top:-10,left:"50%",transform:"translateX(-50%)",background:GD,color:IV,fontSize:8,fontWeight:700,letterSpacing:2,padding:"3px 12px",borderRadius:20,fontFamily:FFB,whiteSpace:"nowrap"}}>MOST POPULAR</span>`}
-                  <p style=${{fontSize:9,letterSpacing:3,color:GD,fontFamily:FFB,fontWeight:500,marginBottom:8}}>${yearlyBilling?"YEARLY":"MONTHLY"} SUBSCRIPTION</p>
-                  <h3 style=${{fontSize:22,fontWeight:600,color:IV,fontFamily:FF,margin:"0 0 16px"}}>${t.name}</h3>
-                  <div style=${{display:"flex",alignItems:"baseline",gap:4,marginBottom:4}}>
-                    <span style=${{fontSize:38,fontWeight:700,color:GD,fontFamily:FFB,lineHeight:1}}>${yearlyBilling?t.yearly:t.monthly}</span>
-                    <span style=${{fontSize:12,color:"rgba(250,246,240,0.4)",fontFamily:FFB}}>${yearlyBilling?"/year":"/month"}</span>
-                  </div>
-                  ${yearlyBilling&&html`<p style=${{fontSize:11,color:GD,fontFamily:FFB,marginBottom:8,opacity:0.8}}>Save ${t.saving} — ${t.monthlyEq}</p>`}
+                <div key=${t.key} style=${{background:t.isLifetime?"linear-gradient(135deg,rgba(160,112,48,0.25) 0%,rgba(107,88,72,0.15) 100%)":t.highlight?"rgba(160,112,48,0.2)":"rgba(0,0,0,0.2)",borderRadius:8,padding:"32px 24px",display:"flex",flexDirection:"column",border:t.isLifetime?"1px solid rgba(160,112,48,0.6)":t.highlight?"1px solid rgba(160,112,48,0.5)":"1px solid transparent",position:"relative"}}>
+                  ${t.isLifetime&&html`<span style=${{position:"absolute",top:-10,left:"50%",transform:"translateX(-50%)",background:GD,color:IV,fontSize:8,fontWeight:700,letterSpacing:2,padding:"3px 12px",borderRadius:20,fontFamily:FFB,whiteSpace:"nowrap"}}>LIFETIME ACCESS</span>`}
+                  ${t.highlight&&!t.isLifetime&&html`<span style=${{position:"absolute",top:-10,left:"50%",transform:"translateX(-50%)",background:GD,color:IV,fontSize:8,fontWeight:700,letterSpacing:2,padding:"3px 12px",borderRadius:20,fontFamily:FFB,whiteSpace:"nowrap"}}>MOST POPULAR</span>`}
+                  ${t.isLifetime
+                    ? html`<p style=${{fontSize:9,letterSpacing:3,color:GD,fontFamily:FFB,fontWeight:500,marginBottom:8}}>LIFETIME MEMBERSHIP</p>
+                            <h3 style=${{fontSize:22,fontWeight:600,color:IV,fontFamily:FF,margin:"0 0 16px"}}>${t.name}</h3>
+                            <div style=${{display:"flex",alignItems:"baseline",gap:4,marginBottom:4}}><span style=${{fontSize:38,fontWeight:700,color:GD,fontFamily:FFB,lineHeight:1}}>${t.price}</span><span style=${{fontSize:12,color:"rgba(250,246,240,0.4)",fontFamily:FFB}}> once</span></div>
+                            <p style=${{fontSize:11,color:GD,fontFamily:FFB,marginBottom:16,opacity:0.8}}>${t.note}</p>`
+                    : html`<p style=${{fontSize:9,letterSpacing:3,color:GD,fontFamily:FFB,fontWeight:500,marginBottom:8}}>${yearlyBilling?"YEARLY":"MONTHLY"} SUBSCRIPTION</p>
+                            <h3 style=${{fontSize:22,fontWeight:600,color:IV,fontFamily:FF,margin:"0 0 16px"}}>${t.name}</h3>
+                            <div style=${{display:"flex",alignItems:"baseline",gap:4,marginBottom:4}}><span style=${{fontSize:38,fontWeight:700,color:GD,fontFamily:FFB,lineHeight:1}}>${yearlyBilling?t.yearly:t.monthly}</span><span style=${{fontSize:12,color:"rgba(250,246,240,0.4)",fontFamily:FFB}}>${yearlyBilling?"/year":"/month"}</span></div>
+                            ${yearlyBilling&&html`<p style=${{fontSize:11,color:GD,fontFamily:FFB,marginBottom:8,opacity:0.8}}>Save ${t.saving} — ${t.monthlyEq}</p>`}`}
                   <div style=${{marginBottom:24,flex:1}}>
                     ${t.benefits.map(b=>html`<p key=${b} style=${{fontSize:13,color:"rgba(250,246,240,0.65)",lineHeight:1.6,margin:"4px 0",display:"flex",alignItems:"flex-start",gap:8}}><span style=${{color:GD,flexShrink:0}}>✓</span>${b}</p>`)}
                   </div>
-                  <button onClick=${()=>window.open(stanSub(t.key),"_blank")}
-                    style=${{background:t.highlight?GD:"rgba(160,112,48,0.3)",color:IV,border:t.highlight?"none":"1px solid rgba(160,112,48,0.4)",cursor:"pointer",fontSize:13,fontWeight:600,padding:"13px 20px",borderRadius:4,fontFamily:FFB,letterSpacing:1.5,width:"100%"}}>
-                    Join the Circle →
+                  <button onClick=${()=>{const u=stanSub(t.key);if(u)window.open(u,"_blank");}}
+                    style=${{background:t.isLifetime?GD:t.highlight?GD:"rgba(160,112,48,0.3)",color:IV,border:t.isLifetime||t.highlight?"none":"1px solid rgba(160,112,48,0.4)",cursor:"pointer",fontSize:13,fontWeight:600,padding:"13px 20px",borderRadius:4,fontFamily:FFB,letterSpacing:1.5,width:"100%"}}>
+                    ${t.isLifetime?"Join The Clique →":"Join →"}
                   </button>
                 </div>`)}
             </div>
-            <p style=${{fontSize:13,color:"rgba(250,246,240,0.35)",fontFamily:FFB,marginBottom:80}}>Cancel anytime. Yearly benefits apply to annual subscriptions only.</p>
+            <p style=${{fontSize:13,color:"rgba(250,246,240,0.35)",fontFamily:FFB,marginBottom:80}}>Cancel anytime. Yearly benefits apply to annual subscriptions only. The Clique is a one-time lifetime purchase.</p>
           </div>
         </section>
 
-        <section style=${{background:BG,padding:"72px 28px"}}>
+        <section style=${{background:BG,padding:"72px 28px 90px"}}>
           <div style=${{maxWidth:1100,margin:"0 auto"}}>
-            <p style=${{fontSize:9,letterSpacing:5,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>PREMIUM PRODUCTS</p>
-            <h2 style=${{fontSize:"clamp(22px,4vw,38px)",fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 10px"}}>One-Time Purchases</h2>
-            <p style=${{fontSize:14,color:MT,marginBottom:48,lineHeight:1.8,maxWidth:540}}>These are separate from your membership. Purchase once and they are yours. No subscription required.</p>
+            <p style=${{fontSize:9,letterSpacing:5,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>MEMBERSHIP TIERS</p>
+            <h2 style=${{fontSize:"clamp(22px,4vw,38px)",fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 10px"}}>Tier Benefits</h2>
+            <p style=${{fontSize:14,color:MT,marginBottom:48,lineHeight:1.8,maxWidth:540}}>Every tier includes full access to Creator Suite. Here is exactly what each level unlocks.</p>
             <div style=${{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(230px,1fr))",gap:16}}>
               ${[
-                {key:"fullVaultBundle",name:"Prompt Vault Bundle",price:"$97",desc:"All 7 niche vaults — 280 personalised content prompts across Lifestyle, Business, Beauty, Fitness, Couples, Parenting and Finance."},
-                {key:"influencerBatch",name:"Influencer Images",price:"From $97",desc:"Curated batches of 20 influencer images built to represent your brand across ethnicities, ages and styles."},
-                {key:"musicJingles",name:"Music & Jingles",price:"From $147",desc:"Original music crafted for your brand. Podcast intros, creator sounds, custom songs and special occasion pieces."},
-                {key:"creatorStylist",name:"Creator Stylist",price:"$150",desc:"AI-generated visual styling prompts built around your exact look, aesthetic and platform. Paste directly into any image tool."},
-              ].map(p=>html`
-                <div key=${p.key} style=${{background:CR,border:`1px solid ${BO}`,borderRadius:8,padding:"28px 22px",display:"flex",flexDirection:"column"}}>
-                  <h3 style=${{fontSize:16,fontWeight:500,color:ESP,fontFamily:FF,margin:"0 0 10px"}}>${p.name}</h3>
-                  <p style=${{fontSize:13,color:MT,lineHeight:1.7,flex:1,marginBottom:20}}>${p.desc}</p>
-                  <div style=${{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
-                    <span style=${{fontSize:15,color:GD,fontFamily:FF,fontWeight:600}}>${p.price}</span>
-                    <button onClick=${()=>window.open(stanPrem(p.key),"_blank")}
-                      style=${{background:"none",border:`1px solid ${BO}`,color:ESP,cursor:"pointer",fontSize:10,padding:"8px 16px",borderRadius:3,fontFamily:FFB,letterSpacing:1}}>
-                      View Product →
-                    </button>
-                  </div>
+                {name:"The Clique",pricing:"$3,497 — once",note:"",
+                  pack:"Inner Circle Pack +",
+                  extras:["Everything in Inner Circle","Lifetime access — never pay again","All current tools forever","Future tools at permanent member discount","Founding Clique member status"]},
+                {name:"Inner Circle",pricing:"$197/month · $2,000/year",note:"",
+                  pack:"Suite Pack +",
+                  extras:["Creator Stylist included yearly","2 custom jingles up to 30 seconds yearly","Early access to every new feature","10% discount on all releases","Founding member of Inner Circle Skool"]},
+                {name:"Suite",pricing:"$97/month · $1,000/year",note:"",
+                  pack:"Elevate Pack +",
+                  extras:["2 custom jingles per year","20 prompt vaults per year","Full sales messaging system","Priority support"]},
+                {name:"Elevate",pricing:"$47/month · $490/year",note:"",
+                  pack:"Origins Pack +",
+                  extras:["Priority generation quality","Advanced content systems","Creator community access","Quarterly strategy drop"]},
+                {name:"Origins",pricing:"$27/month · $280/year",note:"Yearly bonus: 5 free prompts",
+                  pack:"",
+                  extras:["Creator Identity","Client Profile","The Studio","Pitch","Email Suite","● On Air"]},
+              ].map(t=>html`
+                <div key=${t.name} style=${{background:CR,border:`1px solid ${BO}`,borderRadius:8,padding:"28px 22px",display:"flex",flexDirection:"column"}}>
+                  <h3 style=${{fontSize:18,fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 4px"}}>${t.name}</h3>
+                  <p style=${{fontSize:12,color:GD,fontFamily:FFB,marginBottom:4,fontWeight:600,letterSpacing:0.5}}>${t.pricing}</p>
+                  ${t.note&&html`<p style=${{fontSize:11,color:MT,fontFamily:FFB,marginBottom:16,fontStyle:"italic"}}>${t.note}</p>`}
+                  ${t.pack&&html`<p style=${{fontSize:13,color:ESP,lineHeight:1.7,margin:"16px 0 8px",display:"flex",alignItems:"flex-start",gap:8,fontWeight:600,minHeight:"24px"}}>${t.pack}</p>`}
+                  ${t.extras.map(b=>html`<p key=${b} style=${{fontSize:13,color:ESP,lineHeight:1.7,margin:"3px 0",display:"flex",alignItems:"flex-start",gap:8}}><span style=${{color:GD,flexShrink:0}}>✓</span>${b}</p>`)}
                 </div>`)}
             </div>
           </div>
@@ -401,16 +477,16 @@ function App(){
                 <rect x="18" y="34" width="4" height="8" rx="1" fill="#fdfaf6"/>
               </svg>
               <p style=${{fontSize:9,letterSpacing:5,color:GD,fontFamily:FFB,fontWeight:600,marginBottom:12}}>MEMBERS ONLY</p>
-              <h3 style=${{fontSize:22,fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 8px"}}>This space is reserved</h3>
-              <p style=${{fontSize:13,color:MT,lineHeight:1.7,marginBottom:28,fontFamily:FFB}}>Enter your Inner Circle access code to unlock.</p>
+              <h3 style=${{fontSize:22,fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 8px"}}>For those who belong</h3>
+              <p style=${{fontSize:13,color:MT,lineHeight:1.7,marginBottom:28,fontFamily:FFB}}>Enter your Inner Circle</p>
               <input type="text" placeholder="INNERCIRCLE + DDMMYY" value=${unlockCode}
                 onInput=${e=>{setUnlockCode(e.target.value.toUpperCase());setUnlockErr("");}}
-                onKeyDown=${e=>{if(e.key==="Enter"){const c=unlockCode.trim();if(/^INNERCIRCLE\d{6}$/.test(c)){setUnlocking(true);setTimeout(()=>{localStorage.setItem("creator_member","true");setIsMember(true);setUnlocking(false);setUnlockCode("");},2800);}else{setUnlockErr("Incorrect code. Please try again.");}}}}
+                onKeyDown=${e=>{if(e.key==="Enter"){const c=unlockCode.trim();if(/^CHOSEN\d{6}$/.test(c)){setUnlocking(true);setTimeout(()=>{localStorage.setItem("creator_member","true");setIsMember(true);setUnlocking(false);setUnlockCode("");},2800);}else{setUnlockErr("Incorrect code. Please try again.");}}}}
                 style=${{width:"100%",background:BG,border:`1px solid ${BO}`,borderRadius:4,padding:"13px 16px",fontSize:14,fontFamily:FFB,color:ESP,outline:"none",textAlign:"center",letterSpacing:4,boxSizing:"border-box",marginBottom:8}}/>
               ${unlockErr&&html`<p style=${{fontSize:11,color:"#c04040",fontFamily:FFB,marginBottom:8}}>${unlockErr}</p>`}
               <button onClick=${()=>{
                 const c=unlockCode.trim();
-                if(/^INNERCIRCLE\d{6}$/.test(c)){
+                if(/^CHOSEN\d{6}$/.test(c)){
                   setUnlockErr("");
                   setUnlocking(true);
                   setTimeout(()=>{localStorage.setItem("creator_member","true");setIsMember(true);setUnlocking(false);setUnlockCode("");},2800);
@@ -426,7 +502,6 @@ function App(){
         <div style=${{maxWidth:1100,margin:"0 auto",padding:"40px 24px 80px",filter:isMember?"none":"blur(3px)",pointerEvents:isMember?"all":"none",userSelect:isMember?"all":"none"}}>
           <div style=${{marginBottom:32,paddingBottom:24,borderBottom:`1px solid ${BO}`}}>
             <button onClick=${()=>setPage("suite")} style=${{background:"none",border:"none",color:MT,cursor:"pointer",fontSize:12,fontFamily:FFB,padding:"0 0 14px",display:"block",letterSpacing:1}}>← Back to The Suite</button>
-            <p style=${{fontSize:9,letterSpacing:5,color:GD,marginBottom:8,fontFamily:FFB,fontWeight:500}}>TOOL — ${tool.nav.toUpperCase()}</p>
             <h2 style=${{fontSize:"clamp(22px,4vw,40px)",fontWeight:600,color:ESP,margin:"0 0 8px",fontFamily:FF}}>${tool.heading}${tool.id==="live"&&html`<span style=${{color:"#c04040",marginLeft:8,fontSize:13}}>●</span>`}</h2>
             <p style=${{fontSize:13,color:MID,lineHeight:1.7,maxWidth:500}}>${tool.subheading}</p>
           </div>
@@ -454,8 +529,8 @@ function App(){
       ${page==="influencers"&&html`<main>
         <section style=${{background:BG,padding:"72px 28px"}}>
           <div style=${{maxWidth:1100,margin:"0 auto"}}>
-            <p style=${{fontSize:9,letterSpacing:6,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>INFLUENCERS</p>
-            <h2 style=${{fontSize:"clamp(24px,4vw,42px)",fontWeight:600,color:ESP,fontFamily:FF,marginBottom:10}}>Influencer Images</h2>
+            <p style=${{fontSize:9,letterSpacing:6,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>ICONS</p>
+            <h2 style=${{fontSize:"clamp(24px,4vw,42px)",fontWeight:600,color:ESP,fontFamily:FF,marginBottom:10}}>Icons</h2>
             <p style=${{fontSize:13,color:MT,maxWidth:540,marginBottom:52,lineHeight:1.9}}>Curated batches of 20 influencer images built to represent your brand — or individual personas for specific campaigns. All purchases via Stan Store.</p>
 
             <!-- INFLUENCER AI GENERATOR -->
@@ -524,7 +599,7 @@ function App(){
               <div style=${{display:"flex",justifyContent:"space-between",flexWrap:"wrap",gap:14,marginBottom:28}}>
                 <div>
                   <p style=${{fontSize:9,letterSpacing:4,color:GD,marginBottom:8,fontFamily:FFB,fontWeight:500}}>THE INFLUENCER BATCH</p>
-                  <h3 style=${{fontSize:"clamp(18px,3vw,30px)",fontWeight:600,color:ESP,fontFamily:FF,marginBottom:8}}>Batches of 20 Influencers</h3>
+                  <h3 style=${{fontSize:"clamp(18px,3vw,30px)",fontWeight:600,color:ESP,fontFamily:FF,marginBottom:8}}>Icon Batches of 20</h3>
                   <p style=${{fontSize:13,color:MT,maxWidth:520,lineHeight:1.9}}>10 women + 10 men per batch, ages 20–35 or 36–50. Each batch is curated by ethnicity with varied hair types, styles, and colour ranges — ready to represent your brand authentically.</p>
                 </div>
                 <span style=${{fontSize:10,color:IV,background:BUT,padding:"7px 16px",borderRadius:2,fontFamily:FFB,letterSpacing:2,fontWeight:500,alignSelf:"flex-start"}}>BATCH PURCHASE</span>
@@ -547,7 +622,7 @@ function App(){
                   <p style=${{fontSize:20,fontWeight:600,color:ESP,fontFamily:FF}}>$197 <span style=${{fontSize:12,color:MT,fontWeight:400}}>per batch of 20</span></p>
                   <p style=${{fontSize:11,color:MT,marginTop:3}}>Delivered with full usage rights</p>
                 </div>
-                <button class="cta" onClick=${()=>window.open(stanPrem("influencerBatch"),"_blank")} style=${{background:BUT,color:IV,border:"none",cursor:"pointer",fontSize:13,fontWeight:500,padding:"14px 28px",borderRadius:3,fontFamily:FFB,letterSpacing:2}}>Purchase Batch →</button>
+                <button class="cta" onClick=${()=>{const u=stanPrem("influencerBatch");if(u)window.open(u,"_blank");}} style=${{background:BUT,color:IV,border:"none",cursor:"pointer",fontSize:13,fontWeight:500,padding:"14px 28px",borderRadius:3,fontFamily:FFB,letterSpacing:2}}>Purchase Batch →</button>
               </div>
             </div>
 
@@ -575,6 +650,41 @@ function App(){
                   </div>`)}
               </div>
             </div>
+
+            <!-- ONE-TIME PURCHASE SECTION -->
+            <div style=${{marginTop:56,paddingTop:40,borderTop:`1px solid ${BO}`}}>
+              <p style=${{fontSize:9,letterSpacing:5,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>ONE-TIME PURCHASE</p>
+              <h3 style=${{fontSize:"clamp(20px,3vw,32px)",fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 10px"}}>Order Your Icons</h3>
+              <p style=${{fontSize:13,color:MT,lineHeight:1.8,maxWidth:520,marginBottom:12}}>These are separate from your membership. Pay once and they are yours — no subscription required. Choose a full batch or an individual persona package.</p>
+              <p style=${{fontSize:11,color:GD,fontFamily:FFB,marginBottom:36,fontWeight:500}}>Not part of any subscription tier. Standalone purchase only.</p>
+              <div style=${{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(260px,1fr))",gap:16}}>
+                <div style=${{background:CR,border:`1px solid ${BO}`,borderRadius:6,padding:"28px 24px",display:"flex",flexDirection:"column"}}>
+                  <p style=${{fontSize:9,letterSpacing:3,color:GD,fontFamily:FFB,fontWeight:500,marginBottom:8}}>BATCH PURCHASE</p>
+                  <h4 style=${{fontSize:16,fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 8px"}}>Influencer Image Batch</h4>
+                  <p style=${{fontSize:13,color:MT,lineHeight:1.7,flex:1,marginBottom:20}}>20 curated influencer images built to represent your brand. Delivered with full usage rights.</p>
+                  <div style=${{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                    <span style=${{fontSize:20,color:GD,fontFamily:FF,fontWeight:700}}>$197</span>
+                    <button onClick=${()=>{const u=stanPrem("influencerBatch");if(u)window.open(u,"_blank");}}
+                      style=${{background:BUT,color:IV,border:"none",cursor:"pointer",fontSize:12,fontWeight:600,padding:"10px 22px",borderRadius:3,fontFamily:FFB,letterSpacing:1}}>
+                      Purchase →
+                    </button>
+                  </div>
+                </div>
+                <div style=${{background:CR,border:`1px solid ${BO}`,borderRadius:6,padding:"28px 24px",display:"flex",flexDirection:"column"}}>
+                  <p style=${{fontSize:9,letterSpacing:3,color:GD,fontFamily:FFB,fontWeight:500,marginBottom:8}}>INDIVIDUAL PERSONA</p>
+                  <h4 style=${{fontSize:16,fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 8px"}}>Single Creator Persona</h4>
+                  <p style=${{fontSize:13,color:MT,lineHeight:1.7,flex:1,marginBottom:20}}>One persona package for a specific campaign or brand direction. Choose from the options above.</p>
+                  <div style=${{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                    <span style=${{fontSize:20,color:GD,fontFamily:FF,fontWeight:700}}>$47</span>
+                    <button onClick=${()=>{const u=stanPrem("influencerBatch");if(u)window.open(u,"_blank");}}
+                      style=${{background:BUT,color:IV,border:"none",cursor:"pointer",fontSize:12,fontWeight:600,padding:"10px 22px",borderRadius:3,fontFamily:FFB,letterSpacing:1}}>
+                      Purchase →
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
           </div>
         </section>
       </main>`}
@@ -584,7 +694,7 @@ function App(){
         <section style=${{background:BG,padding:"72px 28px"}}>
           <div style=${{maxWidth:1100,margin:"0 auto"}}>
             <p style=${{fontSize:9,letterSpacing:6,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>PROMPT VAULTS</p>
-            <h2 style=${{fontSize:"clamp(24px,4vw,42px)",fontWeight:600,color:ESP,fontFamily:FF,marginBottom:10}}>The Prompt Vault</h2>
+            <h2 style=${{fontSize:"clamp(24px,4vw,42px)",fontWeight:600,color:ESP,fontFamily:FF,marginBottom:10}}>Prompt Vault</h2>
             <p style=${{fontSize:13,color:MT,maxWidth:560,marginBottom:52,lineHeight:1.9}}>Curated prompt collections designed to help you create your own influencer-style content. Buy a vault, drop in your details, and generate weeks of content instantly. All purchases via Stan Store.</p>
 
 
@@ -729,6 +839,37 @@ function App(){
                   </div>`)}
               </div>
             </div>
+
+            <!-- PURCHASE SECTION -->
+            <div style=${{marginTop:56,paddingTop:40,borderTop:`1px solid ${BO}`}}>
+              <p style=${{fontSize:9,letterSpacing:5,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>PURCHASE</p>
+              <h3 style=${{fontSize:"clamp(20px,3vw,32px)",fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 10px"}}>Get Your Vault</h3>
+              <p style=${{fontSize:13,color:MT,lineHeight:1.8,maxWidth:500,marginBottom:36}}>One-time purchase. No subscription required. Buy a single niche vault or get all 7 in the full bundle.</p>
+              <div style=${{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(220px,1fr))",gap:16}}>
+                ${[
+                  {key:"lifestyleVault",name:"Lifestyle Vault",price:"$47",desc:"Content prompts for aspirational lifestyle creators."},
+                  {key:"businessVault",name:"Business Vault",price:"$47",desc:"Strategy and sales content for business creators."},
+                  {key:"beautyFashionVault",name:"Beauty & Fashion Vault",price:"$47",desc:"Style and beauty content across all platforms."},
+                  {key:"fitnessHealthVault",name:"Fitness & Health Vault",price:"$47",desc:"Motivational content for fitness creators."},
+                  {key:"couplesVault",name:"Couples Vault",price:"$27",desc:"Relationship and love content across all platforms."},
+                  {key:"parentingVault",name:"Parenting Vault",price:"$27",desc:"Warm, relatable content for family creators."},
+                  {key:"financeVault",name:"Finance Vault",price:"$37",desc:"Money and wealth content for finance creators."},
+                  {key:"fullVaultBundle",name:"Full Bundle — All 7 Vaults",price:"$197",desc:"Every vault. 280+ prompts. One purchase forever."},
+                ].map(p=>html`
+                  <div key=${p.key} style=${{background:CR,border:`1px solid ${BO}`,borderRadius:6,padding:"24px 20px",display:"flex",flexDirection:"column"}}>
+                    <h4 style=${{fontSize:15,fontWeight:500,color:ESP,fontFamily:FF,margin:"0 0 8px"}}>${p.name}</h4>
+                    <p style=${{fontSize:13,color:MT,lineHeight:1.7,flex:1,marginBottom:16}}>${p.desc}</p>
+                    <div style=${{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                      <span style=${{fontSize:16,color:GD,fontFamily:FF,fontWeight:600}}>${p.price}</span>
+                      <button onClick=${()=>{const u=stanPrem(p.key);if(u)window.open(u,"_blank");}}
+                        style=${{background:GD,color:IV,border:"none",cursor:"pointer",fontSize:11,padding:"8px 16px",borderRadius:3,fontFamily:FFB,letterSpacing:1}}>
+                        Get Vault →
+                      </button>
+                    </div>
+                  </div>`)}
+              </div>
+            </div>
+
           </div>
         </section>
       </main>`}
@@ -834,7 +975,7 @@ function App(){
                         ${instrAdd>0&&lenAdd===0&&html`<p style=${{fontSize:11,color:"rgba(250,246,240,0.5)",fontFamily:FFB,margin:"2px 0 0"}}>Base $${base} + instruments add-on $${instrAdd}</p>`}
                       </div>
                       <div style=${{display:"flex",flexDirection:"column",gap:10,alignItems:"flex-end"}}>
-                        <button onClick=${()=>window.open(stanPrem("musicJingles"),"_blank")}
+                        <button onClick=${()=>{const u=stanPrem("musicJingles");if(u)window.open(u,"_blank");}}
                           style=${{background:GD,color:IV,border:"none",cursor:"pointer",fontSize:13,fontWeight:500,padding:"16px 36px",borderRadius:4,fontFamily:FFB,letterSpacing:1.5,boxShadow:"0 4px 20px rgba(0,0,0,0.3)"}}>
                           Pay $$${total} on Stan Store →
                         </button>
@@ -1063,7 +1204,7 @@ function App(){
               ` : html`
                 <div style=${{background:BG,border:`1px solid ${BO}`,borderRadius:8,padding:"28px 24px"}}>
                   <div style=${{display:"flex",alignItems:"center",gap:10,marginBottom:16}}>
-                    <span style=${{fontSize:18}}>🔒</span>
+                    <svg viewBox="0 0 40 56" width="20" height="28" fill="#a07030" style=${{flexShrink:0}}><ellipse cx="20" cy="16" rx="12" ry="12"/><ellipse cx="20" cy="16" rx="6" ry="6" fill="#fdfaf6"/><rect x="14" y="26" width="12" height="20" rx="2"/><rect x="18" y="34" width="4" height="8" rx="1" fill="#fdfaf6"/></svg>
                     <div>
                       <p style=${{fontSize:13,fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 3px"}}>Brief locked until payment is confirmed</p>
                       <p style=${{fontSize:11,color:MT,fontFamily:FFB,margin:0}}>Pay via Stan Store first — your Order ID will be in the confirmation email.</p>
@@ -1082,7 +1223,7 @@ function App(){
                       Unlock Brief →
                     </button>
                   </div>
-                  <p style=${{fontSize:10,color:MT,fontFamily:FFB,marginTop:12,lineHeight:1.6}}>Don't have an Order ID? <span onClick=${()=>window.open(stanPrem("musicJingles"),"_blank")} style=${{color:GD,cursor:"pointer",textDecoration:"underline"}}>Pay on Stan Store first →</span></p>
+                  <p style=${{fontSize:10,color:MT,fontFamily:FFB,marginTop:12,lineHeight:1.6}}>Don't have an Order ID? <span onClick=${()=>{const u=stanPrem("musicJingles");if(u)window.open(u,"_blank");}} style=${{color:GD,cursor:"pointer",textDecoration:"underline"}}>Pay on Stan Store first →</span></p>
                 </div>
               `}
             </div>
@@ -1092,7 +1233,33 @@ function App(){
               <p style=${{fontSize:9,letterSpacing:5,color:GD,marginBottom:14,fontFamily:FFB,fontWeight:500}}>READY TO SOUND LIKE A BRAND?</p>
               <h3 style=${{fontSize:"clamp(22px,3.5vw,36px)",fontWeight:600,color:IV,fontFamily:FF,marginBottom:12}}>Every great brand has a sound.</h3>
               <p style=${{fontSize:13,color:"rgba(250,246,240,0.65)",maxWidth:440,margin:"0 auto 32px",lineHeight:1.9}}>Your music tells people who you are before you say a word. Order yours today and stand out from every other creator in your niche.</p>
-              <button class="cta" onClick=${()=>window.open(stanPrem("musicJingles"),"_blank")} style=${{background:BUT,color:IV,border:"none",cursor:"pointer",fontSize:13,fontWeight:500,padding:"16px 40px",borderRadius:4,fontFamily:FFB,letterSpacing:2,boxShadow:"0 6px 28px rgba(0,0,0,0.25)"}}>Order Custom Music →</button>
+              <button class="cta" onClick=${()=>{const u=stanPrem("musicJingles");if(u)window.open(u,"_blank");}} style=${{background:BUT,color:IV,border:"none",cursor:"pointer",fontSize:13,fontWeight:500,padding:"16px 40px",borderRadius:4,fontFamily:FFB,letterSpacing:2,boxShadow:"0 6px 28px rgba(0,0,0,0.25)"}}>Order Custom Music →</button>
+            </div>
+
+            <!-- ONE-TIME PURCHASE SECTION -->
+            <div style=${{marginTop:56,paddingTop:40,borderTop:`1px solid ${BO}`}}>
+              <p style=${{fontSize:9,letterSpacing:5,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>ONE-TIME PURCHASE</p>
+              <h3 style=${{fontSize:"clamp(20px,3vw,32px)",fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 10px"}}>Order Your Music</h3>
+              <p style=${{fontSize:13,color:MT,lineHeight:1.8,maxWidth:520,marginBottom:12}}>Music & Jingles are a separate one-time purchase. Not part of any subscription. Pay once and it is yours.</p>
+              <p style=${{fontSize:11,color:GD,fontFamily:FFB,marginBottom:36,fontWeight:500}}>Prices vary depending on brief. All orders placed via Stan Store.</p>
+              <div style=${{display:"grid",gridTemplateColumns:"repeat(auto-fit,minmax(240px,1fr))",gap:16}}>
+                ${[
+                  {title:"Brand Jingle",desc:"A short musical signature for your brand. Podcast intro, creator sound or content opener.",price:"From $147"},
+                  {title:"Custom Song",desc:"A fully personalised song for your brand, occasion or campaign. Written and produced for you.",price:"From $247"},
+                  {title:"Special Occasion",desc:"Birthday, Valentine's, anniversary or celebration songs. Personalised with names and memories.",price:"From $147"},
+                ].map(p=>html`
+                  <div key=${p.title} style=${{background:CR,border:`1px solid ${BO}`,borderRadius:6,padding:"28px 24px",display:"flex",flexDirection:"column"}}>
+                    <h4 style=${{fontSize:16,fontWeight:600,color:ESP,fontFamily:FF,margin:"0 0 8px"}}>${p.title}</h4>
+                    <p style=${{fontSize:13,color:MT,lineHeight:1.7,flex:1,marginBottom:20}}>${p.desc}</p>
+                    <div style=${{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                      <span style=${{fontSize:16,color:GD,fontFamily:FF,fontWeight:700}}>${p.price}</span>
+                      <button onClick=${()=>{const u=stanPrem("musicJingles");if(u)window.open(u,"_blank");}}
+                        style=${{background:BUT,color:IV,border:"none",cursor:"pointer",fontSize:12,fontWeight:600,padding:"10px 20px",borderRadius:3,fontFamily:FFB,letterSpacing:1}}>
+                        Order →
+                      </button>
+                    </div>
+                  </div>`)}
+              </div>
             </div>
 
           </div>
@@ -1105,16 +1272,25 @@ function App(){
         <section style=${{background:BG,padding:"72px 28px"}}>
           <div style=${{maxWidth:1100,margin:"0 auto"}}>
 
-            <div style=${{background:"linear-gradient(135deg,#6b5848 0%,#9a7d68 100%)",borderRadius:8,padding:"20px 28px",marginBottom:36,display:"flex",justifyContent:"space-between",alignItems:"center",flexWrap:"wrap",gap:12}}>
-              <div>
-                <p style=${{fontSize:9,letterSpacing:4,color:"rgba(250,246,240,0.7)",fontFamily:FFB,fontWeight:500,marginBottom:4}}>LIMITED TIME — EARLY ACCESS</p>
-                <p style=${{fontSize:14,color:IV,fontFamily:FF,margin:0}}>Lock in early access now at <strong style=${{color:GD}}>$150</strong> — price will increase</p>
+            <!-- CREATOR STYLIST BANNER -->
+            <div style=${{backgroundImage:"url('/images/creator-stylist-banner.png')",backgroundSize:"cover",backgroundPosition:"center top",borderRadius:8,marginBottom:36,overflow:"hidden",minHeight:320,position:"relative",display:"flex",alignItems:"flex-end"}}>
+              <div style=${{position:"absolute",inset:0,background:"linear-gradient(to right, rgba(0,0,0,0.72) 0%, rgba(0,0,0,0.35) 50%, rgba(0,0,0,0.05) 100%)"}}></div>
+              <div style=${{position:"relative",padding:"44px 40px",maxWidth:520}}>
+                <p style=${{fontSize:9,letterSpacing:5,color:GD,fontFamily:FFB,fontWeight:600,marginBottom:12}}>CREATOR STYLIST</p>
+                <h2 style=${{fontSize:"clamp(26px,4vw,44px)",fontWeight:600,color:IV,fontFamily:FF,lineHeight:1.1,margin:"0 0 12px"}}>Your visual identity.<br/>Built by AI.</h2>
+                <p style=${{fontSize:13,color:"rgba(250,246,240,0.75)",fontFamily:FFB,lineHeight:1.8,margin:"0 0 28px",maxWidth:380}}>One look. Entirely yours. Hyper-realistic, brand-worthy visuals built from your exact brief.</p>
+                <div style=${{display:"flex",alignItems:"center",gap:20,flexWrap:"wrap"}}>
+                  <button onClick=${()=>{const u=stanPrem("creatorStylist");if(u)window.open(u,"_blank");}}
+                    style=${{background:GD,color:IV,border:"none",cursor:"pointer",fontSize:12,fontWeight:600,padding:"14px 28px",borderRadius:4,fontFamily:FFB,letterSpacing:1.5}}>
+                    Get Creator Stylist →
+                  </button>
+                  <span style=${{fontSize:22,fontWeight:700,color:IV,fontFamily:FFB}}>$200</span>
+                  <span style=${{fontSize:11,color:"rgba(250,246,240,0.5)",fontFamily:FFB}}>one-time</span>
+                </div>
               </div>
-              <button onClick=${()=>window.open(stanPrem("creatorStylist"),"_blank")}
-                style=${{background:GD,color:IV,border:"none",cursor:"pointer",fontSize:11,fontWeight:500,padding:"12px 28px",borderRadius:4,fontFamily:FFB,letterSpacing:1.5,whiteSpace:"nowrap"}}>
-                Get Early Access — $150 →
-              </button>
             </div>
+
+                        </div>
 
             <p style=${{fontSize:9,letterSpacing:6,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>THE CREATOR STYLIST</p>
             <h2 style=${{fontSize:"clamp(24px,4vw,42px)",fontWeight:600,color:ESP,fontFamily:FF,marginBottom:10}}>Your AI Visual Stylist</h2>
@@ -1122,25 +1298,108 @@ function App(){
 
             <div style=${{background:ESP,borderRadius:8,padding:"40px 36px",marginBottom:24}}>
 
-              ${stRes ? html`
+              ${stSections ? html`
                 <div>
-                  <div style=${{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:16,flexWrap:"wrap",gap:10}}>
-                    <p style=${{fontSize:9,letterSpacing:3,color:GD,fontFamily:FFB,fontWeight:500,margin:0}}>YOUR STYLING PROMPT — READY TO USE</p>
-                    <div style=${{display:"flex",gap:8}}>
-                      <button onClick=${()=>{navigator.clipboard.writeText(stRes).then(()=>{setStCp(true);setTimeout(()=>setStCp(false),2500);});}}
-                        style=${{fontSize:10,color:GD,background:"none",border:"1px solid rgba(160,112,48,0.4)",cursor:"pointer",padding:"6px 14px",borderRadius:3,fontFamily:FFB}}>
-                        ${stCp?"✓ Copied":"Copy Prompt"}
-                      </button>
-                      <button onClick=${()=>{setStRes("");setStPhase("");setSt({category:"",skin:"",aesthetic:"",platform:"",goal:"",extra:""}); }}
-                        style=${{fontSize:10,color:"rgba(250,246,240,0.5)",background:"none",border:"1px solid rgba(250,246,240,0.15)",cursor:"pointer",padding:"6px 14px",borderRadius:3,fontFamily:FFB}}>
-                        Create Another
-                      </button>
+                  <!-- HEADER -->
+                  <div style=${{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:24,flexWrap:"wrap",gap:10}}>
+                    <p style=${{fontSize:9,letterSpacing:3,color:GD,fontFamily:FFB,fontWeight:500,margin:0}}>YOUR STYLING BREAKDOWN — READY TO USE</p>
+                    <button onClick=${()=>{setStSections(null);setStRes("");setStImg("");setStImgErr("");setStPhase("");setSt({category:"",platform:"",gender:"",ageRange:"",ethnicity:"",hairColor:"",hairHighlights:"",hairStyle:"",outfit:"",location:"",skin:"",undertone:"",aesthetic:"",goal:"",extra:""}); }}
+                      style=${{fontSize:10,color:"rgba(250,246,240,0.5)",background:"none",border:"1px solid rgba(250,246,240,0.15)",cursor:"pointer",padding:"6px 14px",borderRadius:3,fontFamily:FFB}}>
+                      Create Another
+                    </button>
+                  </div>
+
+                  <!-- 6 SECTIONS -->
+                  ${[
+                    {label:"LOOK BREAKDOWN",key:"lookBreakdown"},
+                    {label:"SCENE DIRECTION",key:"sceneDirection"},
+                    {label:"CAMERA DIRECTION",key:"cameraDirection"},
+                    {label:"MAIN PROMPT",key:"mainPrompt"},
+                    {label:"NEGATIVE PROMPT",key:"negativePrompt"},
+                    {label:"VARIATIONS",key:"variations"},
+                  ].map(s=>html`
+                    <div key=${s.key} style=${{marginBottom:20}}>
+                      <div style=${{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:8}}>
+                        <p style=${{fontSize:8,letterSpacing:3,color:GD,fontFamily:FFB,fontWeight:600,margin:0}}>${s.label}</p>
+                        ${s.key==="mainPrompt"&&html`
+                          <button onClick=${()=>{navigator.clipboard.writeText(stSections.mainPrompt).then(()=>{setStCp(true);setTimeout(()=>setStCp(false),2500);});}}
+                            style=${{fontSize:9,color:GD,background:"none",border:"1px solid rgba(160,112,48,0.4)",cursor:"pointer",padding:"4px 10px",borderRadius:3,fontFamily:FFB}}>
+                            ${stCp?"✓ Copied":"Copy"}
+                          </button>`}
+                      </div>
+                      <div style=${{background:"rgba(0,0,0,0.2)",borderRadius:4,padding:"14px 16px"}}>
+                        <p style=${{fontSize:12,color:"rgba(250,246,240,0.85)",fontFamily:FFB,lineHeight:1.9,margin:0,whiteSpace:"pre-wrap"}}>${stSections[s.key]||"—"}</p>
+                      </div>
+                    </div>`)}
+
+                  <!-- IMAGE GENERATION -->
+                  <div style=${{marginTop:28,paddingTop:24,borderTop:"1px solid rgba(250,246,240,0.1)"}}>
+                    <p style=${{fontSize:9,letterSpacing:3,color:GD,fontFamily:FFB,fontWeight:600,marginBottom:16}}>GENERATE YOUR IMAGE</p>
+
+                    <!-- STYLE SELECTOR -->
+                    <div style=${{display:"flex",gap:10,marginBottom:20}}>
+                      ${["vivid","natural"].map(s=>html`
+                        <button key=${s} onClick=${()=>setStStyle(s)}
+                          style=${{fontSize:11,padding:"9px 20px",borderRadius:4,cursor:"pointer",fontFamily:FFB,border:"1px solid",
+                            background:stStyle===s?"rgba(160,112,48,0.9)":"rgba(255,255,255,0.07)",
+                            color:stStyle===s?IV:"rgba(250,246,240,0.65)",
+                            borderColor:stStyle===s?GD:"rgba(250,246,240,0.15)"}}>
+                          ${s.charAt(0).toUpperCase()+s.slice(1)}
+                        </button>`)}
+                      <p style=${{fontSize:11,color:"rgba(250,246,240,0.4)",fontFamily:FFB,margin:"auto 0",paddingLeft:8}}>
+                        ${stStyle==="vivid"?"Bold, high contrast, striking":"Natural light, soft tones, realistic"}
+                      </p>
                     </div>
+
+                    <!-- GENERATE BUTTON -->
+                    ${!stImg&&html`
+                      <button onClick=${async()=>{
+                        setStImgErr("");setStImgLoad(true);setStImg("");
+                        try{
+                          const r=await fetch("/.netlify/functions/generate-stylist-image",{
+                            method:"POST",
+                            headers:{"Content-Type":"application/json"},
+                            body:JSON.stringify({sections:stSections,style:stStyle,productFocus:stSections.category==="Product showcase"})
+                          });
+                          const d=await r.json();
+                          if(!d.success)throw new Error(d.error||"Image generation failed");
+                          setStImg(d.image);
+                          setStImgFmt(d.format);
+                          setStImgModel(d.model);
+                        }catch(e){
+                          setStImgErr(e.message||"Image generation failed. Please try again.");
+                        }finally{setStImgLoad(false);}
+                      }} disabled=${stImgLoad}
+                        style=${{background:stImgLoad?"rgba(160,112,48,0.4)":GD,color:IV,border:"none",
+                          cursor:stImgLoad?"not-allowed":"pointer",fontSize:12,fontWeight:500,
+                          padding:"14px 32px",borderRadius:4,fontFamily:FFB,letterSpacing:1.5}}>
+                        ${stImgLoad?"Generating your image...":"Generate Image →"}
+                      </button>`}
+
+                    ${stImgErr&&html`<p style=${{fontSize:12,color:"#e07070",fontFamily:FFB,marginTop:10}}>${stImgErr}</p>`}
+
+                    <!-- IMAGE OUTPUT -->
+                    ${stImg&&html`
+                      <div style=${{marginTop:20}}>
+                        <img src=${stImgFmt==="base64"?"data:image/png;base64,"+stImg:stImg}
+                          alt="Generated creator image"
+                          style=${{width:"100%",maxWidth:480,borderRadius:6,display:"block",marginBottom:16}}/>
+                        <div style=${{display:"flex",gap:10,flexWrap:"wrap"}}>
+                          <a href=${stImgFmt==="base64"?"data:image/png;base64,"+stImg:stImg}
+                            download="creator-stylist-image.png"
+                            style=${{fontSize:11,color:IV,background:BUT,padding:"10px 20px",borderRadius:3,fontFamily:FFB,letterSpacing:1,textDecoration:"none"}}>
+                            Download Image
+                          </a>
+                          <button onClick=${()=>{setStImg("");setStImgErr("");}}
+                            style=${{fontSize:11,color:"rgba(250,246,240,0.5)",background:"none",border:"1px solid rgba(250,246,240,0.15)",cursor:"pointer",padding:"10px 16px",borderRadius:3,fontFamily:FFB}}>
+                            Generate Again
+                          </button>
+                        </div>
+                        <p style=${{fontSize:10,color:"rgba(250,246,240,0.35)",fontFamily:FFB,marginTop:10}}>${stImgModel==="gpt-image-1"?"Generated with GPT Image 1 — 1024×1536":"Generated with DALL·E 3 — 1024×1792"}</p>
+                      </div>`}
                   </div>
-                  <div style=${{background:"rgba(0,0,0,0.2)",borderRadius:6,padding:"24px 20px",maxHeight:480,overflowY:"auto"}}>
-                    <pre style=${{fontSize:12,color:"rgba(250,246,240,0.9)",fontFamily:FFB,lineHeight:2,whiteSpace:"pre-wrap",margin:0}}>${stRes}</pre>
-                  </div>
-                  <p style=${{fontSize:11,color:"rgba(250,246,240,0.45)",fontFamily:FFB,marginTop:12}}>Paste this directly into Midjourney, Wan AI, Kling, Leonardo or any AI image/video tool.</p>
+
+                  <p style=${{fontSize:11,color:"rgba(250,246,240,0.35)",fontFamily:FFB,marginTop:20}}>Copy the Main Prompt to paste into Midjourney, Wan AI, Kling, Leonardo or any AI image tool.</p>
                 </div>
               ` : html`
                 <div>
@@ -1377,15 +1636,16 @@ function App(){
 
                     ${stErr&&html`<p style=${{fontSize:12,color:"#e07070",fontFamily:FFB}}>${stErr}</p>`}
 
-                    ${st.category&&st.platform&&st.gender&&st.ageRange&&st.ethnicity&&st.skin&&st.aesthetic&&st.goal&&html`
+                    ${st.category&&st.platform&&st.gender&&st.ageRange&&st.ethnicity&&st.skin&&st.aesthetic&&st.goal&&!stSections&&html`
                       <button onClick=${async()=>{
-                        setStErr("");setStLoad(true);setStRes("");
+                        setStErr("");setStLoad(true);setStSections(null);setStRes("");setStImg("");setStImgErr("");
                         try{
-                          setStPhase("Building your prompt...");
+                          setStPhase("Building your styling breakdown...");
                           const r=await fetch("/.netlify/functions/stylist-generator",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({...st})});
                           const d=await r.json();
                           if(!d.success)throw new Error(d.error||"Generation failed");
-                          setStRes(d.result);
+                          setStSections(d.sections);
+                          setStRes(d.sections?.mainPrompt||"");
                           setStPhase("");
                         }catch(e){
                           setStErr(e.message||"Something went wrong. Please try again.");
@@ -1394,7 +1654,7 @@ function App(){
                         finally{setStLoad(false);}
                       }} disabled=${stLoad}
                         style=${{background:stLoad?"rgba(160,112,48,0.4)":GD,color:IV,border:"none",cursor:stLoad?"not-allowed":"pointer",fontSize:12,fontWeight:500,padding:"14px 36px",borderRadius:4,fontFamily:FFB,letterSpacing:1.5,alignSelf:"flex-start"}}>
-                        ${stLoad?"Building your prompt...":"Generate My Styling Prompt →"}
+                        ${stLoad?"Building your breakdown...":"Generate My Styling Prompt →"}
                       </button>`}
 
                   </div>
@@ -1402,12 +1662,26 @@ function App(){
               `}
             </div>
 
+            <!-- PURCHASE SECTION -->
+            <div style=${{marginTop:56,paddingTop:40,borderTop:`1px solid rgba(250,246,240,0.15)`}}>
+              <p style=${{fontSize:9,letterSpacing:5,color:GD,marginBottom:12,fontFamily:FFB,fontWeight:500}}>PURCHASE</p>
+              <h3 style=${{fontSize:"clamp(20px,3vw,32px)",fontWeight:600,color:IV,fontFamily:FF,margin:"0 0 10px"}}>Get Creator Stylist</h3>
+              <p style=${{fontSize:13,color:"rgba(250,246,240,0.65)",lineHeight:1.8,maxWidth:500,marginBottom:32}}>One-time purchase. AI-generated visual styling prompts built around your exact look, aesthetic and platform. Paste directly into Midjourney, Wan AI or Leonardo.</p>
+              <div style=${{display:"flex",alignItems:"center",gap:24,flexWrap:"wrap"}}>
+                <span style=${{fontSize:32,fontWeight:700,color:GD,fontFamily:FFB}}>$200</span>
+                <button onClick=${()=>{const u=stanPrem("creatorStylist");if(u)window.open(u,"_blank");}}
+                  style=${{background:GD,color:IV,border:"none",cursor:"pointer",fontSize:13,fontWeight:600,padding:"14px 32px",borderRadius:4,fontFamily:FFB,letterSpacing:2}}>
+                  Purchase Creator Stylist →
+                </button>
+              </div>
+            </div>
+
           </div>
         </section>
       </main>`}
 
       <footer style=${{background:IV,borderTop:`1px solid ${BO}`,padding:"20px 24px",textAlign:"center"}}>
-        <p style=${{fontSize:9,color:MT,letterSpacing:3,fontFamily:FFB}}>THE CREATOR SUITE · A PRIVATE SYSTEM FOR CREATORS WHO SELL WITH PRECISION</p>
+        <p style=${{fontSize:9,color:MT,letterSpacing:3,fontFamily:FFB}}>CREATOR SUITE · A PRIVATE SYSTEM FOR CREATORS WHO SELL WITH PRECISION</p>
       </footer>
     </div>
   `;
